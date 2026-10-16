@@ -69,6 +69,10 @@
   }
 
   const selected = () => state.stations.find((s) => s.id === state.selectedId) || null;
+  // A station whose audio is flowing right now is online, whatever the last status poll said
+  // (AzuraCast's status lags for a while after a station restart).
+  const audioFlowing = () => state.wantPlaying && !audio.paused && Boolean(audio.getAttribute('src')) && Date.now() - state.lastProgressAt < 8000;
+  const isOnline = (s) => Boolean(s && (s.online || (s.id === state.selectedId && audioFlowing())));
   const fmt = (s) => {
     if (s == null) return '';
     s = Math.max(0, Math.floor(s));
@@ -309,7 +313,7 @@
 
     if (st) {
       el.nowStation.textContent = st.name;
-      el.live.hidden = !(state.wantPlaying && st.online);
+      el.live.hidden = !(state.wantPlaying && isOnline(st));
       // Station logo first (always ours, always loads); album art only when there's no logo.
       const art = st.artwork_url || (st.now_playing && st.now_playing.art_url) || 'icons/icon.svg';
       if (el.art.getAttribute('src') !== art) el.art.src = art;
@@ -319,8 +323,8 @@
     el.list.replaceChildren(...state.stations.map((s) => {
       const li = document.createElement('li');
       const b = document.createElement('button');
-      b.className = 'station' + (s.id === state.selectedId ? ' selected' : '') + (s.online ? '' : ' offline');
-      b.disabled = !s.online && s.id !== state.selectedId;
+      b.className = 'station' + (s.id === state.selectedId ? ' selected' : '') + (isOnline(s) ? '' : ' offline');
+      b.disabled = !isOnline(s) && s.id !== state.selectedId;
       if (s.id === state.selectedId) b.setAttribute('aria-current', 'true');
       const img = document.createElement('img');
       img.src = s.artwork_url || 'icons/icon.svg';
@@ -330,7 +334,7 @@
       const name = document.createElement('strong');
       name.textContent = s.name;
       const sub = document.createElement('small');
-      const bits = [s.genre, s.online ? 'Live' : 'Offline'];
+      const bits = [s.genre, isOnline(s) ? 'Live' : 'Offline'];
       if (s.listeners && s.listeners.current != null) bits.push(`${s.listeners.current} listening`);
       sub.textContent = bits.filter(Boolean).join(' · ');
       text.append(name, sub);
@@ -344,7 +348,7 @@
 
   function renderNowPlaying(st) {
     const np = st.now_playing;
-    if (!st.online) {
+    if (!isOnline(st)) {
       el.nowTitle.textContent = 'Station offline';
       el.nowMeta.textContent = '';
       return;

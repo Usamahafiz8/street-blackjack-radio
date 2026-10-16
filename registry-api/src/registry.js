@@ -47,6 +47,7 @@ export class Registry {
         timeoutMs: this.cfg.requestTimeoutMs,
         fetchImpl: this.fetchImpl,
       });
+      await this.verifyOfflineStations(raw);
       this.azuracast = { raw, lastSuccessAt: this.now(), lastError: null, stale: false };
       this.saveState();
     } catch (err) {
@@ -55,6 +56,33 @@ export class Registry {
       }
       this.azuracast = { ...this.azuracast, lastError: err.message, stale: true };
     }
+  }
+
+  /**
+   * AzuraCast's is_online flag lags behind for a while after a station restart, so a station
+   * can be reported offline while it is already streaming. When AzuraCast says "offline",
+   * open the station's stream internally; if audio flows, treat the station as online.
+   */
+  async verifyOfflineStations(raw) {
+    const internal = new URL(this.cfg.azuracastInternalUrl);
+    await Promise.allSettled(
+      raw
+        .filter((np) => np?.station && !np.is_online)
+        .map(async (np) => {
+          const mounts = np.station.mounts || [];
+          const src = (mounts.find((m) => m.is_default) || mounts[0])?.url || np.station.listen_url;
+          if (!src) return;
+          const u = new URL(src, internal);
+          u.protocol = internal.protocol;
+          u.host = internal.host;
+          const check = await checkStream(u.toString(), {
+            timeoutMs: Math.min(this.cfg.requestTimeoutMs, 4000),
+            allowInsecure: true, // internal address only, never returned to clients
+            fetchImpl: this.fetchImpl,
+          });
+          if (check.online) np.is_online = true;
+        }),
+    );
   }
 
   async refreshExternals() {

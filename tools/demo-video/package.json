@@ -1,0 +1,9 @@
+{
+  "name": "sbr-demo-video",
+  "private": true,
+  "type": "module",
+  "description": "Records a demo video of the Street Blackjack Radio player (local stack) with the live audio.",
+  "dependencies": {
+    "playwright-core": "1.64.1"
+  }
+}

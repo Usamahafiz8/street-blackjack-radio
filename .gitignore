@@ -27,3 +27,8 @@ Thumbs.db
 # Vercel build output / project link
 .vercel-build/
 .vercel/
+
+# Demo video tooling/output
+tools/demo-video/node_modules/
+.demo-work/
+*.mp4
