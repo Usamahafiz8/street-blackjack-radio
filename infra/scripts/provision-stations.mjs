@@ -154,17 +154,19 @@ async function main() {
     // Media: each playlist names its files, either a whole folder (source_dir) or a list
     // (files, paths relative to the media root). dest = folder inside the station (e.g. "ads").
     const isAudio = (f) => /\.(mp3|m4a|aac|ogg|flac|wav)$/i.test(f);
+    // AzuraCast stores uploads with normalised names (lower case, spaces -> underscores).
+    const azName = (path) => path.split('/').map((seg) => seg.toLowerCase().replace(/\s+/g, '_')).join('/');
     const plFiles = new Map(); // playlist name -> [{ local, remote }]
     for (const p of def.playlists) {
       const list = [];
       if (p.source_dir) {
         for (const f of (await readdir(join(mediaRoot, p.source_dir))).filter(isAudio).sort()) {
-          list.push({ local: join(mediaRoot, p.source_dir, f), remote: p.dest ? `${p.dest}/${f}` : f });
+          list.push({ local: join(mediaRoot, p.source_dir, f), remote: azName(p.dest ? `${p.dest}/${f}` : f) });
         }
       }
       for (const rel of p.files || []) {
         const f = rel.split('/').pop();
-        list.push({ local: join(mediaRoot, rel), remote: p.dest ? `${p.dest}/${f}` : f });
+        list.push({ local: join(mediaRoot, rel), remote: azName(p.dest ? `${p.dest}/${f}` : f) });
       }
       plFiles.set(p.name, list);
     }

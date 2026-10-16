@@ -44,6 +44,7 @@ async function sample() {
     played_at: np.now_playing?.played_at ?? null,
     duration: np.now_playing?.duration ?? null,
     elapsed: np.now_playing?.elapsed ?? null,
+    playlist: np.now_playing?.playlist ?? null,
   }));
 }
 
@@ -72,7 +73,7 @@ function analyse(samples) {
       // New item: it should start when the previous one ended.
       const expected = p.played_at + p.duration;
       const gap = s.played_at - expected;
-      transitions.push({ at: hhmmss(s.played_at), from: p.title, to: s.title, gap_s: Math.round(gap) });
+      transitions.push({ at: hhmmss(s.played_at), from: p.title, to: s.title, to_playlist: s.playlist, gap_s: Math.round(gap) });
       if (Math.abs(gap) > GAP_TOLERANCE_S && s.played_at - p.played_at < 3 * p.duration) {
         issues.push(`${hhmmss(s.t)} gap of ${Math.round(gap)}s between "${p.title}" and "${s.title}"`);
       }
@@ -108,7 +109,13 @@ async function main() {
     pass &&= ok;
     report[station] = { pass: ok, samples: samples.length, transitions, issues, max_listeners_seen: maxListeners };
     console.log(`\n${station}: ${ok ? 'PASS' : 'FAIL'}  (${samples.length} samples, ${transitions.length} track change(s))`);
-    for (const tr of transitions) console.log(`   ${tr.at}  "${tr.from}" -> "${tr.to}"  gap ${tr.gap_s}s`);
+    for (const tr of transitions) console.log(`   ${tr.at}  "${tr.from}" -> "${tr.to}" [${tr.to_playlist}]  gap ${tr.gap_s}s`);
+    const adBreaks = transitions.filter((tr) => /^(ads?|promo)/i.test(tr.to_playlist || ''));
+    report[station].ad_breaks = adBreaks.length;
+    if (args['expect-ads']) {
+      console.log(`   Ad breaks: ${adBreaks.length} (each started when the previous item ended - see gaps above)`);
+      if (transitions.length && !adBreaks.length) { pass = false; report[station].pass = false; console.log('   ! no ad break observed'); }
+    }
     for (const i of issues) console.log(`   ! ${i}`);
     console.log(maxListeners === 0
       ? '   Listeners: 0 for the whole run - the station advanced with nobody listening.'
