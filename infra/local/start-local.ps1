@@ -24,19 +24,43 @@ if (-not $gw) {
   Write-Host "Gateway started on port 8088"
 }
 
-# 4. Optional temporary HTTPS tunnel (exposes ONLY the gateway, never the AzuraCast admin)
+# 4. Optional temporary HTTPS tunnel (exposes ONLY the gateway, never the AzuraCast admin).
+#    Tries a Cloudflare quick tunnel first; if that can't start (it times out on some connections),
+#    falls back to localhost.run over SSH (built into Windows, no account, no install).
+#    127.0.0.1 is used rather than "localhost", which can resolve to IPv6 (::1); the gateway listens on IPv4.
 if ($Tunnel) {
-  if (-not (Get-Command cloudflared -ErrorAction SilentlyContinue)) { throw "cloudflared is not installed (see docs/stage2-local.md)" }
-  $log = "$env:TEMP\sbradio-tunnel.log"
-  Remove-Item $log -ErrorAction SilentlyContinue
-  Start-Process -WindowStyle Hidden -FilePath cloudflared -ArgumentList 'tunnel', '--no-autoupdate', '--url', 'http://localhost:8088' `
-    -RedirectStandardError $log | Out-Null
   $url = $null
-  for ($i = 0; $i -lt 30 -and -not $url; $i++) {
-    Start-Sleep 1
-    if (Test-Path $log) { $url = (Select-String -Path $log -Pattern 'https://[a-z0-9-]+\.trycloudflare\.com' | Select-Object -First 1).Matches.Value }
+  $cf = (Get-Command cloudflared -ErrorAction SilentlyContinue).Source
+  $default = 'C:\Program Files (x86)\cloudflared\cloudflared.exe' # winget install location (may not be on PATH yet)
+  if (-not $cf -and (Test-Path $default)) { $cf = $default }
+  if ($cf) {
+    $log = Join-Path $env:TEMP 'sbradio-tunnel.log'
+    for ($attempt = 1; $attempt -le 2 -and -not $url; $attempt++) {
+      Remove-Item $log -ErrorAction SilentlyContinue
+      $proc = Start-Process -WindowStyle Hidden -FilePath $cf -ArgumentList 'tunnel', '--no-autoupdate', '--url', 'http://127.0.0.1:8088' `
+        -RedirectStandardError $log -PassThru
+      for ($i = 0; $i -lt 45 -and -not $url -and -not $proc.HasExited; $i++) {
+        Start-Sleep 1
+        # skip api.trycloudflare.com, which appears in the log while the tunnel is being requested
+        if (Test-Path $log) { $url = (Select-String -Path $log -Pattern 'https://(?!api\.)[a-z0-9-]+\.trycloudflare\.com' | Select-Object -First 1).Matches.Value }
+      }
+      if (-not $url) { Write-Host "Cloudflare tunnel attempt $attempt failed"; if (-not $proc.HasExited) { Stop-Process -Id $proc.Id -Force } }
+    }
   }
-  Write-Host "Tunnel (HTTPS, temporary): $url"
+  if (-not $url) {
+    Write-Host "Trying localhost.run instead..."
+    $log = Join-Path $env:TEMP 'sbradio-lhr.log'
+    Remove-Item $log -ErrorAction SilentlyContinue
+    Start-Process -WindowStyle Hidden -FilePath ssh.exe -ArgumentList '-o', 'StrictHostKeyChecking=accept-new', '-o', 'ServerAliveInterval=30',
+      '-o', 'ExitOnForwardFailure=yes', '-R', '80:127.0.0.1:8088', 'nokey@localhost.run', '--', '--output', 'json' `
+      -RedirectStandardOutput $log -RedirectStandardError ($log + '.err') | Out-Null
+    for ($i = 0; $i -lt 30 -and -not $url; $i++) {
+      Start-Sleep 1
+      if (Test-Path $log) { $url = (Select-String -Path $log -Pattern 'https://[a-z0-9-]+\.lhr\.life' | Select-Object -First 1).Matches.Value }
+    }
+  }
+  if ($url) { Write-Host "Tunnel (HTTPS, temporary): $url" }
+  else { Write-Host "No tunnel could be started. Run this script again with -Tunnel, or use the same-Wi-Fi option." }
 }
 
 Write-Host ""

@@ -3,8 +3,10 @@
 param([switch]$All)
 $Distro = 'Ubuntu-24.04'
 
-Get-CimInstance Win32_Process -Filter "Name='cloudflared.exe'" | Where-Object { $_.CommandLine -match 'localhost:8088' } |
-  ForEach-Object { Stop-Process -Id $_.ProcessId -Force; Write-Host "Tunnel stopped" }
+Get-CimInstance Win32_Process -Filter "Name='cloudflared.exe'" | Where-Object { $_.CommandLine -match ':8088' } |
+  ForEach-Object { Stop-Process -Id $_.ProcessId -Force; Write-Host "Cloudflare tunnel stopped" }
+Get-CimInstance Win32_Process -Filter "Name='ssh.exe'" | Where-Object { $_.CommandLine -match 'localhost\.run' } |
+  ForEach-Object { Stop-Process -Id $_.ProcessId -Force; Write-Host "localhost.run tunnel stopped" }
 Get-CimInstance Win32_Process -Filter "Name='node.exe'" | Where-Object { $_.CommandLine -match 'gateway\.mjs' } |
   ForEach-Object { Stop-Process -Id $_.ProcessId -Force; Write-Host "Gateway stopped" }
 

@@ -37,11 +37,18 @@ const REGISTRY_PREFIXES = ['/v1/', '/art/'];
 
 const log = (...a) => console.log(new Date().toISOString(), ...a);
 
+// Temporary HTTPS tunnel services: visitors always arrive over HTTPS, even when the tunnel
+// doesn't send X-Forwarded-Proto (localhost.run doesn't). Otherwise stream links would be
+// http:// and Safari would block them as mixed content.
+const HTTPS_TUNNEL_SUFFIXES = (process.env.HTTPS_TUNNEL_SUFFIXES || '.trycloudflare.com,.lhr.life,.localhost.run')
+  .split(',').map((s) => s.trim()).filter(Boolean);
+
 function clientOrigin(req) {
-  // cloudflared adds X-Forwarded-Proto: https; plain LAN/localhost requests are http.
-  const proto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() === 'https' ? 'https' : 'http';
   const host = String(req.headers['x-forwarded-host'] || req.headers.host || `localhost:${PORT}`).split(',')[0].trim();
-  return { proto, host };
+  const viaTunnel = HTTPS_TUNNEL_SUFFIXES.some((s) => host.split(':')[0].endsWith(s));
+  // cloudflared adds X-Forwarded-Proto: https; plain LAN/localhost requests are http.
+  const fwd = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
+  return { proto: viaTunnel || fwd === 'https' ? 'https' : 'http', host };
 }
 
 function proxy(req, res, target, { stream = false } = {}) {
