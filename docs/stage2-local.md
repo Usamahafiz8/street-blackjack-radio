@@ -38,35 +38,32 @@ Stage 2 runs on this Windows PC instead of a VPS. Everything listeners need is t
 
 ---
 
+## Admin login (local test install)
+
+At your request, I created the local admin account and API key with `infra/local/bootstrap-admin.mjs`. Both use randomly generated **test** credentials. They're stored only inside WSL, in files readable only by root, and were never shown in chat or committed to git.
+
+| File (inside `Ubuntu-24.04`) | Contents |
+|---|---|
+| `/opt/sbradio/secrets/azuracast-admin.env` | Admin email `admin@sbradio.test` and password |
+| `/opt/sbradio/secrets/azuracast-api.env` | API key used by the station setup script |
+
+To log in at **http://localhost:18080**, show the password in **your own** PowerShell window:
+
+```powershell
+wsl -d Ubuntu-24.04 -u root -- cat /opt/sbradio/secrets/azuracast-admin.env
+```
+
+You can change the password under *My Account* after logging in. If you ever lock yourself out:
+
+```powershell
+wsl -d Ubuntu-24.04 -u root -- docker exec -it azuracast azuracast_cli azuracast:account:reset-password admin@sbradio.test
+```
+
+This shortcut is **local only**. On the real server you create the admin account yourself through the SSH tunnel (see `stage2-vps-setup.md`).
+
 ## Your steps
 
-### 1. Create the AzuraCast admin account (5 min, on this PC only)
-1. Open **http://localhost:18080** in your browser on this PC.
-2. Create the **Super Administrator** account. Use your email and a strong password, and save it in your password manager.
-3. If it asks you to create a station, create:
-   - Name: `UK Rap / Drill / Grime`
-   - Short name: `uk_rap`
-
-   My script will adopt it.
-4. On **System Settings**, set **Site Base URL** to `http://localhost:18080` and save.
-
-### 2. Create an API key and store it inside WSL (3 min)
-1. In AzuraCast, open the top-right menu → **My Account** → **API Keys** → **Add API Key**. Name it `provisioning`, then copy the key.
-2. Open **PowerShell** and enter the WSL distro (no password needed):
-
-   ```powershell
-   wsl -d Ubuntu-24.04 -u root
-   ```
-
-3. Paste this line and press Enter. Then paste the key when asked; nothing will show on screen, which is normal.
-
-   ```bash
-   read -rs -p "Paste AzuraCast API key: " K && printf 'AZURACAST_API_KEY=%s\n' "$K" > /opt/sbradio/secrets/azuracast-api.env && chmod 600 /opt/sbradio/secrets/azuracast-api.env && unset K && echo " saved"
-   ```
-
-4. Type `exit`, and tell me **"API key saved"**. Please don't send the key itself.
-
-### 3. Stop the PC sleeping during the continuous-playback test
+### 1. Stop the PC sleeping while the radio runs
 The test runs for about 40 minutes, and the radio should keep running while you test from your phone.
 - **Settings → System → Power & sleep → Sleep → "When plugged in, PC goes to sleep after": Never.** The screen turning off is fine; only *sleep* stops the radio.
 - **If this is a laptop:** Control Panel → Power Options → *Choose what closing the lid does* → **When plugged in: Do nothing**. Keep it plugged in.
@@ -80,25 +77,24 @@ The test runs for about 40 minutes, and the radio should keep running while you 
   Put them back afterwards, e.g. 30 minutes: `powercfg /change standby-timeout-ac 30`.
 - I'll also ask the Claude app to keep the PC awake while the test runs.
 
-### 4. Phone testing: pick one or both
+### 2. Phone testing: pick one or both
 
 **A. Temporary HTTPS tunnel (recommended for iPhone).** It works on Wi-Fi *or* mobile data, and needs no firewall change. HTTPS is required for lock-screen controls, Add to Home Screen (PWA) and background-playback tests.
-1. Install Cloudflare's tunnel tool (free, no account needed):
 
-   ```powershell
-   winget install --id Cloudflare.cloudflared
-   ```
+Start (or restart) the stack with a tunnel:
 
-2. Close and reopen PowerShell, then start the stack with a tunnel:
+```powershell
+powershell -ExecutionPolicy Bypass -File D:\radio\infra\local\start-local.ps1 -Tunnel
+```
 
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File D:\radio\infra\local\start-local.ps1 -Tunnel
-   ```
-
-3. It prints an address like `https://random-words.trycloudflare.com`. Open it on your iPhone.
-4. The tunnel exposes **only the gateway**: the player, the station list and the audio. The AzuraCast dashboard isn't reachable through it.
-5. The address changes every time, and stops working when you run `stop-local.ps1` or restart the PC.
-6. Cloudflare quick tunnels are meant for testing only.
+It prints an `https://…` address. Open that on your iPhone.
+- The script tries a **Cloudflare quick tunnel** first.
+  - On this connection Cloudflare's tunnel service answers too slowly: about 6 s over IPv4, and IPv6 doesn't work. `cloudflared` gives up every time.
+  - So the script **falls back to localhost.run**: a free, account-free HTTPS tunnel using the SSH client built into Windows. Its addresses look like `https://abc123.lhr.life`.
+- Either way, the tunnel forwards **only the gateway** (port 8088): the player, the station list, the audio and album art. I checked that the dashboard, login, setup and AzuraCast API return 404 through the tunnel.
+- The address changes each time, and free localhost.run addresses can expire after a while. Just run the script again with `-Tunnel`.
+- `stop-local.ps1` closes the tunnel.
+- These free tunnels are for testing only; production uses a real domain with HTTPS.
 
 **B. Same Wi-Fi, plain HTTP.** Fine for basic play, switching and the leave-and-return test. No PWA or lock-screen controls.
 1. Windows currently treats your Wi-Fi ("Home-4G") as a **Public** network, which blocks incoming connections. Either:
@@ -151,6 +147,7 @@ These are the same tests as [stage2-poc.md](stage2-poc.md#how-you-can-check-it-y
 | Registry `AZURACAST_PUBLIC_URL=auto` (URLs follow the request) | Fixed `https://radio.<domain>` (`infra/compose.yml`) |
 | `CORS_ORIGINS=*` | Allow-list: player domain + the game's domain(s) |
 | AzuraCast base URL `http://localhost:18080`, set with `BASE_URL=` | `https://radio.<domain>`, from `RADIO_DOMAIN` |
-| Cloudflare quick tunnel for phone HTTPS | Not needed: the real domain has HTTPS |
+| Temporary tunnel (Cloudflare / localhost.run) for phone HTTPS | Not needed: the real domain has HTTPS |
+| Admin + API key created by `bootstrap-admin.mjs` with generated test credentials | Owner creates the admin via SSH tunnel; API key saved by the owner |
 | Keep-alive process + "never sleep" power setting | Server runs 24/7 |
 | `sslip.io` hostnames | Not needed locally; optional on a VPS before DNS is ready |
