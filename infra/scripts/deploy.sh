@@ -13,7 +13,7 @@ SSH=(ssh -i "$KEY" -o IdentitiesOnly=yes "$HOST")
 cd "$(dirname "$0")/../.."
 echo "==> Uploading code to $HOST:/opt/sbradio/app"
 tar --exclude='.git' --exclude='node_modules' --exclude='.env' --exclude='.env.*' --exclude='*.mp3' --exclude='*.wav' \
-  -czf - infra registry-api player | "${SSH[@]}" 'mkdir -p /opt/sbradio/app && tar -xzf - -C /opt/sbradio/app'
+  --exclude='.demo-work' --exclude='*.mp4' -czf - infra registry-api player tools | "${SSH[@]}" 'mkdir -p /opt/sbradio/app && tar -xzf - -C /opt/sbradio/app'
 
 echo "==> Restarting services"
 "${SSH[@]}" 'cd /opt/sbradio/app/infra && sudo bash scripts/up.sh'
