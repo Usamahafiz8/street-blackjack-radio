@@ -1,0 +1,68 @@
+{
+  "_comment": "Stage 3: all five Street Blackjack stations. Used by infra/scripts/provision-stations.mjs. Paths are relative to the media root (/opt/sbradio/test-audio locally). TEST SETTINGS: adverts play after every mix (play_per_songs 1) because the test mixes are only 12 minutes; with real ~30 min mix parts use 2 (= an advert break about every hour).",
+  "settings": { "timezone": "Europe/London" },
+  "fallback_file": "fallback.mp3",
+  "stations": [
+    {
+      "name": "UK Rap / Drill / Grime",
+      "short_name": "uk_rap",
+      "description": "UK Rap, Drill and Grime - 24/7",
+      "genre": "UK Rap",
+      "playlists": [
+        { "name": "Rotation", "type": "default", "order": "sequential", "weight": 3, "source_dir": "uk_rap" },
+        { "name": "Ads - UK Rap", "type": "once_per_x_songs", "play_per_songs": 1, "order": "shuffle", "dest": "ads",
+          "files": ["ads/promo-tournament.mp3", "ads/sponsor-a.mp3"] }
+      ]
+    },
+    {
+      "name": "Afrobeats / Amapiano",
+      "short_name": "afrobeats",
+      "description": "Afrobeats and Amapiano - 24/7",
+      "genre": "Afrobeats",
+      "playlists": [
+        { "name": "Rotation", "type": "default", "order": "sequential", "weight": 3, "source_dir": "afrobeats" },
+        { "name": "Ads - Afrobeats", "type": "once_per_x_songs", "play_per_songs": 1, "order": "shuffle", "dest": "ads",
+          "files": ["ads/promo-tournament.mp3", "ads/sponsor-b.mp3"] }
+      ]
+    },
+    {
+      "name": "Dancehall / Reggae",
+      "short_name": "dancehall",
+      "description": "Dancehall and Reggae - 24/7",
+      "genre": "Dancehall",
+      "playlists": [
+        { "name": "Rotation", "type": "default", "order": "sequential", "weight": 3, "source_dir": "dancehall" },
+        { "name": "Friday Night Dancehall", "type": "default", "order": "sequential", "weight": 3,
+          "files": ["dancehall/dancehall-test-mix-4.mp3"],
+          "schedule": [{ "start_time": 2000, "end_time": 2300, "days": [5] }] },
+        { "name": "Ads - Dancehall", "type": "once_per_x_songs", "play_per_songs": 1, "order": "shuffle", "dest": "ads",
+          "files": ["ads/promo-new-tables.mp3", "ads/sponsor-a.mp3"] }
+      ]
+    },
+    {
+      "name": "R&B / Slow Jams",
+      "short_name": "rnb",
+      "description": "R&B and Slow Jams - 24/7",
+      "genre": "R&B",
+      "playlists": [
+        { "name": "Rotation", "type": "default", "order": "sequential", "weight": 3, "source_dir": "rnb" },
+        { "name": "Ads - R&B", "type": "once_per_x_songs", "play_per_songs": 1, "order": "shuffle", "dest": "ads",
+          "files": ["ads/promo-tournament.mp3", "ads/sponsor-b.mp3"] },
+        { "name": "Promo - DJ Night campaign", "type": "once_per_x_minutes", "play_per_minutes": 30, "order": "shuffle", "dest": "ads",
+          "files": ["ads/event-dj-night.mp3"],
+          "schedule": [{ "start_time": 0, "end_time": 2359, "days": [1, 2, 3, 4, 5, 6, 7], "start_date": "2026-10-17", "end_date": "2026-10-24" }] }
+      ]
+    },
+    {
+      "name": "Old School / Hip-Hop Classics",
+      "short_name": "oldschool",
+      "description": "Old School and Hip-Hop Classics - 24/7",
+      "genre": "Hip-Hop",
+      "playlists": [
+        { "name": "Rotation", "type": "default", "order": "sequential", "weight": 3, "source_dir": "oldschool" },
+        { "name": "Ads - Old School", "type": "once_per_x_songs", "play_per_songs": 1, "order": "shuffle", "dest": "ads",
+          "files": ["ads/promo-tournament.mp3", "ads/promo-new-tables.mp3"] }
+      ]
+    }
+  ]
+}

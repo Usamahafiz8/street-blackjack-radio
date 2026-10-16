@@ -1,5 +1,5 @@
 {
-  "_comment": "Stage 2 proof-of-concept stations. Used by infra/scripts/provision-stations.mjs. Media folders are on the server under /opt/sbradio/test-audio/<short_name>.",
+  "_comment": "Stage 2 proof-of-concept stations (superseded by stations.full.json). Used by infra/scripts/provision-stations.mjs.",
   "settings": {
     "timezone": "Europe/London"
   },
@@ -10,9 +10,14 @@
       "short_name": "uk_rap",
       "description": "UK Rap, Drill and Grime - 24/7",
       "genre": "UK Rap",
-      "media_dir": "uk_rap",
       "playlists": [
-        { "name": "Rotation", "type": "default", "order": "sequential", "weight": 3 }
+        {
+          "name": "Rotation",
+          "type": "default",
+          "order": "sequential",
+          "weight": 3,
+          "source_dir": "uk_rap"
+        }
       ]
     },
     {
@@ -20,9 +25,14 @@
       "short_name": "afrobeats",
       "description": "Afrobeats and Amapiano - 24/7",
       "genre": "Afrobeats",
-      "media_dir": "afrobeats",
       "playlists": [
-        { "name": "Rotation", "type": "default", "order": "sequential", "weight": 3 }
+        {
+          "name": "Rotation",
+          "type": "default",
+          "order": "sequential",
+          "weight": 3,
+          "source_dir": "afrobeats"
+        }
       ]
     }
   ]

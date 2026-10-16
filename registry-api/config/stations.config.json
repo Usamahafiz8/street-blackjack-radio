@@ -1,7 +1,14 @@
 {
   "_comment": "Station Registry config. AzuraCast stations appear automatically; 'overrides' (keyed by AzuraCast short name) only change how they are displayed. External stations are listed under 'external'. Changes are picked up without a restart.",
   "azuracast": {
-    "hide_playlists_matching": ["^ads?\\b", "advert", "promo", "sponsor", "jingle", "station id"],
+    "hide_playlists_matching": [
+      "^ads?\\b",
+      "advert",
+      "promo",
+      "sponsor",
+      "jingle",
+      "station id"
+    ],
     "overrides": {
       "uk_rap": {
         "id": "uk-rap",
@@ -16,10 +23,44 @@
         "genre": "Afrobeats",
         "order": 20,
         "artwork": "afrobeats.svg"
+      },
+      "dancehall": {
+        "id": "dancehall",
+        "name": "Dancehall / Reggae",
+        "genre": "Dancehall",
+        "order": 30,
+        "artwork": "dancehall.svg"
+      },
+      "rnb": {
+        "id": "rnb",
+        "name": "R&B / Slow Jams",
+        "genre": "R&B",
+        "order": 40,
+        "artwork": "rnb.svg"
+      },
+      "oldschool": {
+        "id": "oldschool",
+        "name": "Old School / Hip-Hop Classics",
+        "genre": "Hip-Hop",
+        "order": 50,
+        "artwork": "oldschool.svg"
       }
     }
   },
   "external": [
+    {
+      "id": "ontop-fm",
+      "enabled": false,
+      "name": "OnTop FM",
+      "genre": "UK Urban - Live",
+      "description": "Independent live station from London. Enable once the owner has provided the HTTPS stream URL and written permission.",
+      "stream_url": "https://REPLACE-WITH-ONTOP-FM-HTTPS-STREAM-URL",
+      "format": "mp3",
+      "bitrate": null,
+      "order": 60,
+      "artwork": "ontop-fm.svg",
+      "stats": null
+    },
     {
       "id": "external-test",
       "enabled": true,

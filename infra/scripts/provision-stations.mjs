@@ -151,19 +151,37 @@ async function main() {
       }
     }
 
-    // Media
-    const dir = join(mediaRoot, def.media_dir);
-    const localFiles = (await readdir(dir)).filter((f) => /\.(mp3|m4a|aac|ogg|flac|wav)$/i.test(f)).sort();
+    // Media: each playlist names its files, either a whole folder (source_dir) or a list
+    // (files, paths relative to the media root). dest = folder inside the station (e.g. "ads").
+    const isAudio = (f) => /\.(mp3|m4a|aac|ogg|flac|wav)$/i.test(f);
+    const plFiles = new Map(); // playlist name -> [{ local, remote }]
+    for (const p of def.playlists) {
+      const list = [];
+      if (p.source_dir) {
+        for (const f of (await readdir(join(mediaRoot, p.source_dir))).filter(isAudio).sort()) {
+          list.push({ local: join(mediaRoot, p.source_dir, f), remote: p.dest ? `${p.dest}/${f}` : f });
+        }
+      }
+      for (const rel of p.files || []) {
+        const f = rel.split('/').pop();
+        list.push({ local: join(mediaRoot, rel), remote: p.dest ? `${p.dest}/${f}` : f });
+      }
+      plFiles.set(p.name, list);
+    }
     let files = await api('GET', `/station/${sid}/files`);
-    for (const f of localFiles) {
-      if (files.some((m) => m.path === f)) { info(`media exists: ${f}`); continue; }
-      await flowUpload(`/station/${sid}/files/upload`, join(dir, f));
-      info(`uploaded: ${f}`);
+    const uploaded = new Set(files.map((m) => m.path));
+    for (const { local, remote } of [...plFiles.values()].flat()) {
+      if (uploaded.has(remote)) continue;
+      const folder = remote.includes('/') ? remote.slice(0, remote.lastIndexOf('/')) : '';
+      await flowUpload(`/station/${sid}/files/upload`, local, folder ? { currentDirectory: folder } : {});
+      uploaded.add(remote);
+      info(`uploaded: ${remote}`);
     }
     files = await api('GET', `/station/${sid}/files`);
 
     // Playlists
     const playlists = await api('GET', `/station/${sid}/playlists`);
+    const wanted = new Map(); // media id -> Set(playlist ids)
     for (const p of def.playlists) {
       let pl = playlists.find((x) => x.name === p.name);
       const body = {
@@ -171,20 +189,32 @@ async function main() {
         is_enabled: true, weight: p.weight ?? 3, include_in_requests: false, include_in_on_demand: false,
         avoid_duplicates: p.order !== 'sequential', is_jingle: Boolean(p.is_jingle),
         play_per_songs: p.play_per_songs ?? 0, play_per_minutes: p.play_per_minutes ?? 0,
+        schedule_items: (p.schedule || []).map((s) => ({
+          start_time: s.start_time, end_time: s.end_time, days: s.days || [],
+          start_date: s.start_date || null, end_date: s.end_date || null, loop_once: Boolean(s.loop_once),
+        })),
       };
       if (!pl) {
         pl = await api('POST', `/station/${sid}/playlists`, body);
-        info(`playlist created: ${p.name} (${body.order})`);
+        info(`playlist created: ${p.name} (${body.type}, ${body.order}${body.play_per_songs ? `, every ${body.play_per_songs} song(s)` : ''}${body.play_per_minutes ? `, every ${body.play_per_minutes} min` : ''}${body.schedule_items.length ? ', scheduled' : ''})`);
       } else {
         await api('PUT', `/station/${sid}/playlist/${pl.id}`, body);
         info(`playlist updated: ${p.name}`);
       }
-      const members = files.filter((m) => localFiles.includes(m.path));
-      for (const m of members) {
-        const already = (m.playlists || []).some((x) => (x.id ?? x) === pl.id);
-        if (!already) await api('PUT', `/station/${sid}/file/${m.id}`, { playlists: [pl.id] });
+      for (const { remote } of plFiles.get(p.name)) {
+        const m = files.find((x) => x.path === remote);
+        if (!m) throw new Error(`uploaded file not found in AzuraCast: ${remote}`);
+        if (!wanted.has(m.id)) wanted.set(m.id, new Set());
+        wanted.get(m.id).add(pl.id);
       }
-      info(`${members.length} file(s) in "${p.name}"`);
+      info(`${plFiles.get(p.name).length} file(s) in "${p.name}"`);
+    }
+    // Assign each file to ALL its playlists in one update (an update replaces the file's playlist list).
+    for (const [mediaId, ids] of wanted) {
+      const m = files.find((x) => x.id === mediaId);
+      const current = new Set((m.playlists || []).map((x) => x.id ?? x));
+      if ([...ids].every((id) => current.has(id))) continue;
+      await api('PUT', `/station/${sid}/file/${mediaId}`, { playlists: [...new Set([...current, ...ids])] });
     }
 
     // Disable AzuraCast's empty auto-created "default" playlist, if any, to keep things tidy.

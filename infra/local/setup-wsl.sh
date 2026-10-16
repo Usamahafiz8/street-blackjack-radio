@@ -10,7 +10,7 @@ log() { printf '\n==> %s\n' "$*"; }
 log "Packages (curl, git, jq, ffmpeg, espeak-ng)"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -y
-apt-get install -y curl git jq ffmpeg espeak-ng ca-certificates
+apt-get install -y curl git jq ffmpeg espeak-ng nodejs ca-certificates
 
 log "Time zone"
 timedatectl set-timezone Europe/London 2>/dev/null || ln -sf /usr/share/zoneinfo/Europe/London /etc/localtime

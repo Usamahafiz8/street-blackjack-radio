@@ -26,7 +26,7 @@ log "System updates and packages"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -y
 apt-get upgrade -y
-apt-get install -y ufw fail2ban unattended-upgrades curl git jq ffmpeg espeak-ng ca-certificates
+apt-get install -y ufw fail2ban unattended-upgrades curl git jq ffmpeg espeak-ng nodejs ca-certificates
 
 log "Automatic security updates"
 dpkg-reconfigure -f noninteractive unattended-upgrades
