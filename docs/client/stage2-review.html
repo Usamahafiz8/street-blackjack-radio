@@ -95,17 +95,17 @@ code { font: .88em var(--mono); }
 
 <div class="wrap">
   <header>
-    <span class="eyebrow">Street Blackjack Radio · Stage 2 review · 17 October 2026</span>
+    <span class="eyebrow">Street Blackjack Radio · Project review · 17 October 2026</span>
     <h1>Street Blackjack Radio: progress against your brief</h1>
-    <p class="lede">Every point in your project brief, checked against what has been built and tested so far. Stage 1 (investigation) and Stage 2 (proof of concept) are complete. This page lists what is working, what comes next, and the decisions needed from you before Stage 3.</p>
-    <div class="meta"><span>Platform: AzuraCast (stable)</span><span>Stations in proof of concept: 2 of 5</span><span>Test audio: synthetic, licence-free</span></div>
+    <p class="lede">Every point in your project brief, checked against what has been built and tested. All four stages have now been worked through on the test server. What remains needs either the live server, real phones, or material and decisions from you; that is listed at the end.</p>
+    <div class="meta"><span>Platform: AzuraCast (stable)</span><span>Stations: 5 + OnTop FM ready</span><span>Test audio: synthetic, licence-free</span></div>
   </header>
 
   <div class="verdict" aria-label="Summary">
+    <div><b>5 / 5</b><span>Genre stations broadcasting 24/7 with adverts, schedules and looping</span></div>
     <div><b>40 min</b><span>Non-stop broadcast test with zero listeners: passed</span></div>
-    <div><b>3 / 3</b><span>Mix changes per station played back to back, including looping to the start</span></div>
-    <div><b>~2 s</b><span>Player reconnects by itself after a server restart</span></div>
-    <div><b>0</b><span>Admin pages or keys reachable by listeners</span></div>
+    <div><b>10 / 10</b><span>Advert breaks played between mixes, never inside one</span></div>
+    <div><b>1,000</b><span>Simultaneous listeners at full quality in the load test, no drops</span></div>
   </div>
 
   <section aria-labelledby="demo-h">
@@ -121,94 +121,87 @@ code { font: .88em var(--mono); }
     <h2 id="brief-h">Your brief, point by point</h2>
     <div class="legend">
       <span><span class="chip done">Done</span> built and tested</span>
-      <span><span class="chip cfg">Built in</span> AzuraCast does it; set up in Stage 3</span>
-      <span><span class="chip next">Stage 3/4</span> planned work</span>
+      <span><span class="chip next">Go-live</span> ready; needs the live server or real phones</span>
       <span><span class="chip you">Your input</span> needs a decision or material from you</span>
     </div>
 
     <article class="brief">
       <h3><span class="num">§1</span> Radio broadcasting system</h3>
-      <div class="row"><span class="req">Use AzuraCast instead of building from scratch</span><span class="chip done">Done</span><span class="note">Installed and running. Its scheduling, playlists, listener statistics and admin panel are used as they are, with no custom rebuild.</span></div>
-      <div class="row"><span class="req">Multiple independent stations, 24/7</span><span class="chip done">Done</span><span class="note">Proven with UK Rap and Afrobeats running side by side, each at its own position.</span></div>
-      <div class="row"><span class="req">UK Rap / Drill / Grime · Afrobeats / Amapiano</span><span class="chip done">Done</span><span class="note">Both live with test audio.</span></div>
-      <div class="row"><span class="req">Dancehall / Reggae · R&amp;B / Slow Jams · Old School / Hip-Hop</span><span class="chip next">Stage 3</span><span class="note">Same setup, scripted, so adding them takes minutes.</span></div>
-      <div class="row"><span class="req">OnTop FM as a selectable station</span><span class="chip you">Your input</span><span class="note">Support for outside stations is built and tested with a stand-in station. We need OnTop FM's stream address and written permission.</span></div>
-      <div class="row"><span class="req">Easy to add more stations later</span><span class="chip done">Done</span><span class="note">A new AzuraCast station appears in the station list automatically. Outside stations are one entry in a settings file. Neither needs changes to the player or the game.</span></div>
+      <div class="row"><span class="req">Use AzuraCast instead of building from scratch</span><span class="chip done">Done</span><span class="note">Its scheduling, playlists, listener statistics and admin panel are used as they are, with no custom rebuild.</span></div>
+      <div class="row"><span class="req">Five independent 24/7 stations</span><span class="chip done">Done</span><span class="note">UK Rap / Drill / Grime · Afrobeats / Amapiano · Dancehall / Reggae · R&amp;B / Slow Jams · Old School / Hip-Hop Classics. All broadcasting with test audio.</span></div>
+      <div class="row"><span class="req">OnTop FM as a selectable station</span><span class="chip you">Your input</span><span class="note">Already in the station list, switched off. It needs OnTop FM's HTTPS stream address and written permission; switching it on is then a one-line change, with no change to the game.</span></div>
+      <div class="row"><span class="req">Easy to add more stations later</span><span class="chip done">Done</span><span class="note">New AzuraCast stations appear in the station list automatically. Outside stations are one entry in a settings file. No player or game changes needed.</span></div>
     </article>
 
     <article class="brief">
       <h3><span class="num">§2</span> Continuous broadcasting</h3>
-      <div class="row"><span class="req">Broadcasting regardless of whether anybody is listening</span><span class="chip done">Done</span><span class="note">A 40-minute automated test with zero listeners passed on both stations.</span></div>
-      <div class="row"><span class="req">Tune in mid-mix and hear the current point</span><span class="chip done">Done</span><span class="note">Shown in the demo.</span></div>
-      <div class="row"><span class="req">Leave and come back, and hear what is broadcasting now</span><span class="chip done">Done</span><span class="note">Paused at 2:33, resumed at 3:54 after 80 seconds away.</span></div>
-      <div class="row"><span class="req">Next mix plays automatically; playlists loop</span><span class="chip done">Done</span><span class="note">Mixes 2 → 3 → 4 → 1 played back to back with no gap, with nobody intervening.</span></div>
+      <div class="row"><span class="req">Broadcasting regardless of whether anybody is listening</span><span class="chip done">Done</span><span class="note">40-minute automated test with zero listeners: passed.</span></div>
+      <div class="row"><span class="req">Tune in mid-mix and hear the current point; leave and return to hear what is on now</span><span class="chip done">Done</span><span class="note">Shown in the demo (2:33 → 3:54 after 80 seconds away).</span></div>
+      <div class="row"><span class="req">Next mix plays automatically; playlists loop</span><span class="chip done">Done</span><span class="note">Mixes played back to back and looped from the last mix to the first without anyone touching anything.</span></div>
     </article>
 
     <article class="brief">
       <h3><span class="num">§3</span> Admin dashboard</h3>
-      <div class="row"><span class="req">Upload long DJ mixes</span><span class="chip done">Done</span><span class="note">Uploads use AzuraCast's chunked uploader, which suits long mixes, and very large files can also go up by SFTP. A step-by-step admin guide comes in Stage 3.</span></div>
-      <div class="row"><span class="req">Create, manage, disable and remove stations</span><span class="chip cfg">Built in</span><span class="note">Part of the AzuraCast admin panel.</span></div>
-      <div class="row"><span class="req">Assign music to genres; playlists and playback order</span><span class="chip done">Done</span><span class="note">One station per genre, with a looping playlist in set order. Folders and extra playlists can be used inside a station for sub-genres.</span></div>
-      <div class="row"><span class="req">Schedule mixes for particular days and times</span><span class="chip cfg">Built in</span><span class="note">Day and time schedules exist in AzuraCast; your real schedule is set up in Stage 3.</span></div>
-      <div class="row"><span class="req">Repeat automatically</span><span class="chip done">Done</span><span class="note">Shown in the 40-minute test.</span></div>
-      <div class="row"><span class="req">Upload and schedule adverts</span><span class="chip next">Stage 3</span><span class="note">See §4.</span></div>
-      <div class="row"><span class="req">See which stations are broadcasting; listener counts</span><span class="chip done">Done</span><span class="note">Shown in the dashboard and in the station list the game will use.</span></div>
+      <div class="row"><span class="req">Upload long DJ mixes</span><span class="chip done">Done</span><span class="note">Chunked uploads handle long files, with SFTP for very large batches. A splitting tool cuts long mixes into ~30-minute parts at natural transitions so adverts fit between them. The original files are kept.</span></div>
+      <div class="row"><span class="req">Create, manage, disable and remove stations</span><span class="chip done">Done</span><span class="note">In the AzuraCast admin panel, explained step by step in the admin guide.</span></div>
+      <div class="row"><span class="req">Genres, playlists, playback order, repeat</span><span class="chip done">Done</span><span class="note">One station per genre, each with a looping Rotation in set order.</span></div>
+      <div class="row"><span class="req">Schedule mixes for particular days and times</span><span class="chip done">Done</span><span class="note">Example set up and seen working live: "Friday Night Dancehall", Fridays 20:00–23:00, took over from the usual rotation during that slot.</span></div>
+      <div class="row"><span class="req">Upload and schedule adverts</span><span class="chip done">Done</span><span class="note">See §4.</span></div>
+      <div class="row"><span class="req">See which stations are broadcasting; listener counts</span><span class="chip done">Done</span><span class="note">Dashboard Station Overview and the station list the game uses.</span></div>
+      <div class="row"><span class="req">Plain-English admin guide</span><span class="chip done">Done</span><span class="note">Uploading, splitting mixes, playlists, scheduling, adverts, adding or disabling stations, outside stations, backups, and troubleshooting.</span></div>
     </article>
 
     <article class="brief">
       <h3><span class="num">§4</span> Advertising</h3>
-      <div class="row"><span class="req">Adverts and Street Blackjack promos between music</span><span class="chip cfg">Built in</span><span class="note">AzuraCast plays advert playlists "once every N songs" or "once every N minutes", always at a break, never cutting into a track.</span></div>
-      <div class="row"><span class="req">Choose which adverts, which stations, and roughly how often</span><span class="chip cfg">Built in</span><span class="note">Each station has its own advert playlists. Date ranges handle campaigns such as tournament promotions.</span></div>
-      <div class="row"><span class="req">Adverts at natural breaks, not mid-mix</span><span class="chip next">Stage 3</span><span class="note">A 3-hour mix is a single file, so AzuraCast can only place adverts between mixes. As agreed, long mixes will be split into roughly 30-minute parts at natural transitions so adverts can play between parts. The originals are kept. Small custom tool.</span></div>
-      <div class="row"><span class="req">No marketplace or billing in version one</span><span class="chip done">Done</span><span class="note">Not included, as requested. Play logs per advert are available for basic reporting.</span></div>
+      <div class="row"><span class="req">Adverts and Street Blackjack promos between music, different per station</span><span class="chip done">Done</span><span class="note">Each station has its own advert playlist, for example a tournament promo on UK Rap and a sponsor advert on Afrobeats. A 28-minute test recorded 10 advert breaks across the five stations.</span></div>
+      <div class="row"><span class="req">At natural breaks, never cutting into a mix</span><span class="chip done">Done</span><span class="note">Every advert started exactly when the previous mix part ended. Long mixes are split into ~30-minute parts so there are regular breaks.</span></div>
+      <div class="row"><span class="req">Control how often, and limited-time campaigns</span><span class="chip done">Done</span><span class="note">"After every N mixes" or "every N minutes". Example campaign: a DJ Night promo running only 17–24 October.</span></div>
+      <div class="row"><span class="req">No marketplace or billing in version one</span><span class="chip done">Done</span><span class="note">Not included, as requested. Per-advert play logs exist for basic proof of play.</span></div>
     </article>
 
     <article class="brief">
       <h3><span class="num">§5</span> OnTop FM and other outside stations</h3>
-      <div class="row"><span class="req">Use OnTop FM's own stream, not routed through our server</span><span class="chip done">Done</span><span class="note">The player connects straight to the outside stream, with no load on our server and no interference with OnTop FM. The server checks every minute whether the station is online.</span></div>
-      <div class="row"><span class="req">Offline outside stations must not break anything</span><span class="chip done">Done</span><span class="note">A deliberately broken test station shows as "Offline" and cannot be selected.</span></div>
-      <div class="row"><span class="req">Stream must be HTTPS</span><span class="chip you">Your input</span><span class="note">Browsers block plain-HTTP audio on secure pages. If OnTop FM's stream is HTTP-only, they can enable HTTPS, or we pass it through our server's HTTPS address.</span></div>
+      <div class="row"><span class="req">Played from its own stream, not routed through our server</span><span class="chip done">Done</span><span class="note">Tested with a stand-in outside station. There's no load on our server and no interference with OnTop FM.</span></div>
+      <div class="row"><span class="req">Offline outside stations must not break anything</span><span class="chip done">Done</span><span class="note">Checked every minute; shown as "Offline" and not selectable while down.</span></div>
     </article>
 
     <article class="brief">
       <h3><span class="num">§6</span> Standalone radio player</h3>
-      <div class="row"><span class="req">Station list, selection highlight, Radio ON/OFF, play/pause, mute, station info</span><span class="chip done">Done</span><span class="note">All in the demo.</span></div>
-      <div class="row"><span class="req">Independent volume control</span><span class="chip done">Done</span><span class="note">On desktop and Android. On iPhone, Apple does not let web pages set the volume, so listeners use the phone's buttons; mute works everywhere. This affects the game too.</span></div>
-      <div class="row"><span class="req">Switching jumps to the new station's live broadcast</span><span class="chip done">Done</span><span class="note">Shown in the demo.</span></div>
-      <div class="row"><span class="req">Desktop, Android and especially iPhone Safari (incl. home-screen app, background)</span><span class="chip next">Stage 4</span><span class="note">Tested on desktop Chrome. Lock-screen controls and the home-screen app are built in, but still need checking on real iPhones and Android phones; that is the Stage 4 test matrix.</span></div>
+      <div class="row"><span class="req">Station list, highlight, Radio ON/OFF, play/pause, mute, volume, station info</span><span class="chip done">Done</span><span class="note">All shown in the demo.</span></div>
+      <div class="row"><span class="req">Switching jumps to the new station's live broadcast</span><span class="chip done">Done</span></div>
+      <div class="row"><span class="req">Recovers by itself after drops and server restarts</span><span class="chip done">Done</span><span class="note">Reconnects within seconds. Station status stays correct during restarts.</span></div>
+      <div class="row"><span class="req">iPhone Safari, home-screen app, background and lock screen; Android</span><span class="chip next">Go-live</span><span class="note">Phone layouts and the iPhone volume rule were checked in phone emulation. Lock screen, background play and the home-screen app must be checked on real iPhones and Android phones; a ready checklist is included.</span></div>
     </article>
 
     <article class="brief">
       <h3><span class="num">§7</span> Integration with Street Blackjack</h3>
-      <div class="row"><span class="req">One address that lists all stations</span><span class="chip done">Done</span><span class="note">The Station Registry returns every station with name, genre, secure stream address, artwork, what's playing, listener count, and online or offline status.</span></div>
-      <div class="row"><span class="req">Authentication</span><span class="chip done">Done</span><span class="note">None needed: it is read-only public information. No admin keys are ever sent to players.</span></div>
-      <div class="row"><span class="req">Each player picks their own station independently</span><span class="chip done">Done</span><span class="note">Every listener has their own connection, so six players at a table can be on six stations, or have radio off.</span></div>
-      <div class="row"><span class="req">Documentation for the game developer</span><span class="chip next">Stage 4</span><span class="note">API reference, example responses, and guidance on game sounds and voice chat on iPhone.</span></div>
-      <div class="row"><span class="req">We do not integrate it into the game ourselves</span><span class="chip done">Done</span><span class="note">Nothing touches the game.</span></div>
+      <div class="row"><span class="req">One address listing all stations, with name, genre, stream, artwork, now playing, listeners and status</span><span class="chip done">Done</span></div>
+      <div class="row"><span class="req">Authentication</span><span class="chip done">Done</span><span class="note">None needed (read-only public information). No admin keys are ever exposed.</span></div>
+      <div class="row"><span class="req">Each player picks their own station; no interference with game sound or voice chat</span><span class="chip done">Done</span><span class="note">Every listener has their own connection. Guidance for your developer covers game sounds, voice chat and iPhone audio rules.</span></div>
+      <div class="row"><span class="req">Documentation for your developer</span><span class="chip done">Done</span><span class="note">API reference with real example responses, CORS setup, and step-by-step connection guidance with sample code.</span></div>
     </article>
 
     <article class="brief">
       <h3><span class="num">§8</span> Hosting and infrastructure</h3>
-      <div class="row"><span class="req">Server requirements, monthly cost, storage, bandwidth, capacity, scaling, backups</span><span class="chip done">Done</span><span class="note">Covered in the Stage 1 report. Recommended: an OVH UK server with unlimited traffic, about £17 a month plus VAT (200 GB for 20–50 hours of mixes per station, with room to grow). That should handle well over a thousand simultaneous listeners. Relay servers are added for more, at about £6 a month each.</span></div>
-      <div class="row"><span class="req">Radio problems cannot affect the game</span><span class="chip done">Done</span><span class="note">Separate server and address. If the radio is down, the game simply shows "radio unavailable".</span></div>
-      <div class="row"><span class="req">Production server</span><span class="chip you">Your input</span><span class="note">Proof of concept runs on a test machine. Setup scripts for the real server are ready; it needs ordering and a domain name.</span></div>
+      <div class="row"><span class="req">Requirements, costs, storage, bandwidth, capacity, scaling, backups</span><span class="chip done">Done</span><span class="note">Recommended: OVH UK server, about £17 a month plus VAT, unlimited traffic. 1,000 simultaneous listeners were tested at full quality. Backups were tested.</span></div>
+      <div class="row"><span class="req">Radio problems cannot affect the game</span><span class="chip done">Done</span><span class="note">Separate server and address. If the radio is down, the game shows "radio unavailable".</span></div>
+      <div class="row"><span class="req">Live server with secure HTTPS</span><span class="chip you">Your input</span><span class="note">Setup scripts and the deployment guide are ready and tested; the HTTPS configuration has been validated. Ordering the server and providing the domain name is what's left, then about an hour of setup.</span></div>
     </article>
 
     <article class="brief">
       <h3><span class="num">§9</span> Technical requirements</h3>
-      <div class="row"><span class="req">Secure HTTPS streaming</span><span class="chip next">Stage 3</span><span class="note">Automatic certificates are configured for the production server. Demo HTTPS currently uses a temporary link.</span></div>
-      <div class="row"><span class="req">24/7 broadcasting; automatic recovery</span><span class="chip done">Done</span><span class="note">Back-to-back playback, a fallback recording if a playlist is ever empty, and the player reconnecting by itself after a restart.</span></div>
-      <div class="row"><span class="req">Admin secured; no keys exposed to listeners</span><span class="chip done">Done</span><span class="note">Verified: admin, login and setup pages all return "not found" to listeners.</span></div>
-      <div class="row"><span class="req">Add stations without rebuilding the player</span><span class="chip done">Done</span><span class="note">See §1.</span></div>
-      <div class="row"><span class="req">Properly licensed audio</span><span class="chip you">Your input</span><span class="note">All test audio is generated, with no third-party music. Public broadcast of commercial music in the UK needs PPL and PRS for Music licences. A description of the service to send them is ready.</span></div>
+      <div class="row"><span class="req">24/7 broadcasting; automatic recovery</span><span class="chip done">Done</span></div>
+      <div class="row"><span class="req">Admin secured; no keys exposed</span><span class="chip done">Done</span><span class="note">Listeners cannot reach the admin pages. On the live server the dashboard can also be limited to your own internet addresses (tested).</span></div>
+      <div class="row"><span class="req">Add stations without rebuilding the player</span><span class="chip done">Done</span></div>
+      <div class="row"><span class="req">Properly licensed audio</span><span class="chip you">Your input</span><span class="note">All test audio is generated, with no third-party music. Public broadcast of commercial music needs PPL and PRS for Music licences. A description of the service to send them is ready.</span></div>
     </article>
 
     <article class="brief">
-      <h3><span class="num">§10</span> Staged development</h3>
-      <div class="row"><span class="req">Stage 1: investigation, hosting, costs, custom-work list</span><span class="chip done">Done</span></div>
-      <div class="row"><span class="req">Stage 2: two test stations, continuous playback, basic player, leave-and-return</span><span class="chip done">Done</span></div>
-      <div class="row"><span class="req">Stage 3: remaining stations, schedules, adverts, outside stations, admin guide</span><span class="chip next">Next</span></div>
-      <div class="row"><span class="req">Stage 4: device testing, API docs, deployment, handover</span><span class="chip next">After Stage 3</span></div>
+      <h3><span class="num">§10</span> Stages</h3>
+      <div class="row"><span class="req">Stage 1: investigation, hosting and costs</span><span class="chip done">Done</span></div>
+      <div class="row"><span class="req">Stage 2: proof of concept</span><span class="chip done">Done</span></div>
+      <div class="row"><span class="req">Stage 3: all stations, schedules, adverts, outside stations, admin guide</span><span class="chip done">Done</span></div>
+      <div class="row"><span class="req">Stage 4: testing, API docs, deployment guide</span><span class="chip done">Done</span><span class="note">Real-device checks and a final re-test on the live server happen at go-live.</span></div>
     </article>
   </section>
 
@@ -218,31 +211,33 @@ code { font: .88em var(--mono); }
       <table class="tests">
         <thead><tr><th>Test</th><th>What happened</th><th>Result</th></tr></thead>
         <tbody>
-          <tr><td>Broadcast with nobody listening, 40 minutes</td><td>Both stations stayed online with 0 listeners; each played 3 mix changes back to back, including looping to the start</td><td><span class="chip done">Pass</span></td></tr>
-          <tr><td>Leave and come back</td><td>Rejoined at the live point, not where playback stopped</td><td><span class="chip done">Pass</span></td></tr>
-          <tr><td>Switch stations</td><td>Each station plays from its own live point</td><td><span class="chip done">Pass</span></td></tr>
-          <tr><td>Server restart while listening</td><td>Player reconnected on its own within about 2 seconds</td><td><span class="chip done">Pass</span></td></tr>
-          <tr><td>Offline outside station</td><td>Shown as offline and not selectable; player unaffected</td><td><span class="chip done">Pass</span></td></tr>
-          <tr><td>Listeners cannot reach admin</td><td>Admin, login, setup and private API all "not found" from outside</td><td><span class="chip done">Pass</span></td></tr>
-          <tr><td>Stream quality</td><td>128 kbps MP3 at true real-time rate</td><td><span class="chip done">Pass</span></td></tr>
-          <tr><td>iPhone lock screen, background play, home-screen app</td><td>Built in; to be confirmed on real devices</td><td><span class="chip next">Stage 4</span></td></tr>
+          <tr><td>Broadcast with nobody listening, 40 min</td><td>Online throughout; mixes back to back, including looping</td><td><span class="chip done">Pass</span></td></tr>
+          <tr><td>Adverts, all five stations, 28 min</td><td>10 advert breaks, each between mixes, each station with its own adverts</td><td><span class="chip done">Pass</span></td></tr>
+          <tr><td>Scheduled show</td><td>Friday Night Dancehall took over during its time slot</td><td><span class="chip done">Pass</span></td></tr>
+          <tr><td>Splitting a long mix</td><td>Cut exactly at the natural transitions; warns when there isn't one nearby</td><td><span class="chip done">Pass</span></td></tr>
+          <tr><td>Leave and come back</td><td>Rejoined at the live point</td><td><span class="chip done">Pass</span></td></tr>
+          <tr><td>Server restart while listening</td><td>Player reconnected by itself; status stayed correct</td><td><span class="chip done">Pass</span></td></tr>
+          <tr><td>300 and 1,000 simultaneous listeners</td><td>Everyone at full 128 kbps quality, zero drops</td><td><span class="chip done">Pass</span></td></tr>
+          <tr><td>Backup</td><td>Full settings backup in under a second</td><td><span class="chip done">Pass</span></td></tr>
+          <tr><td>Listeners cannot reach admin</td><td>Admin, login and setup pages blocked</td><td><span class="chip done">Pass</span></td></tr>
+          <tr><td>Phone layouts (emulated iPhone and Android)</td><td>Correct layout; iPhone shows volume-button note</td><td><span class="chip done">Pass</span></td></tr>
+          <tr><td>Real iPhone / Android: lock screen, background, home-screen app</td><td>Checklist ready</td><td><span class="chip next">Go-live</span></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="lede" style="font-size:.95rem">One problem found and fixed along the way: on the test machine the clock ran 3.5% slow, which made the broadcast slightly slower than real time. The automated test caught it, it was corrected, and the test was re-run and passed. It is specific to the test machine and does not occur on a proper server; a check for it is included in the final testing.</p>
+    <p class="lede" style="font-size:.95rem">Problems found by the tests and fixed along the way: the test machine's clock ran 3.5% slow, which would have caused stutter; station status briefly showed "offline" after a restart; and the iPhone volume slider wasn't hidden. Each was fixed and re-tested.</p>
   </section>
 
   <section aria-labelledby="decide-h">
-    <h2 id="decide-h">Decisions needed to start Stage 3</h2>
+    <h2 id="decide-h">What's needed from you to go live</h2>
     <ol class="decide">
-      <li><b>Approve the approach.</b> AzuraCast for broadcasting and admin, a small station list service for the game, and outside stations such as OnTop FM played directly from their own stream.</li>
-      <li><b>Approve hosting.</b> OVH UK server, about £17 a month plus VAT, with unlimited traffic.</li>
-      <li><b>Domain names.</b> For example <code>radio.yourdomain.com</code>, used for the station list and streams.</li>
-      <li><b>Adverts within long mixes.</b> Confirm that splitting mixes into roughly 30-minute parts is acceptable, or say if adverts should only play between whole mixes.</li>
+      <li><b>Approve the approach and hosting.</b> AzuraCast plus our station list service, on an OVH UK server at about £17 a month plus VAT.</li>
+      <li><b>Domain names.</b> For example <code>radio.yourdomain.com</code>.</li>
       <li><b>OnTop FM.</b> Stream address and written permission from the owner.</li>
-      <li><b>Content.</b> First real mixes, adverts and station artwork.</li>
-      <li><b>Licensing.</b> Contact PPL and PRS for Music before public launch. The prepared service description explains how the radio works (in-game, after login, advert-supported, five stations, long repeat cycles).</li>
-      <li><b>iPhone volume.</b> Accept that on iPhone, volume is controlled with the phone's buttons. This is an Apple restriction that applies to every web player.</li>
+      <li><b>Content.</b> Real mixes, adverts and station logos. Confirm adverts every ~hour (after every two ~30-minute parts) is the right frequency.</li>
+      <li><b>Licensing.</b> PPL and PRS for Music before public launch. The service description is ready to send.</li>
+      <li><b>iPhone volume.</b> Accept that on iPhone, volume is set with the phone's buttons (an Apple rule for all web players).</li>
+      <li><b>Real-device testing.</b> A short session on an iPhone and an Android phone using the checklist, once the live server is up.</li>
     </ol>
   </section>
 
@@ -250,11 +245,11 @@ code { font: .88em var(--mono); }
     <h2 id="limits-h">Worth knowing</h2>
     <div class="callout warn">
       <p>After a station is restarted, AzuraCast starts the next mix from its beginning rather than resuming the interrupted one. Normal 24/7 running is unaffected.</p>
-      <p>Licensing bodies usually want reports of the individual tracks played. Since stations play whole DJ mixes, tracklists from the DJs will be needed for that reporting.</p>
+      <p>Licensing bodies usually want reports of individual tracks played. Since stations play whole DJ mixes, tracklists from the DJs will be needed for that reporting.</p>
     </div>
   </section>
 
   <footer>
-    Prepared for the Street Blackjack Radio project. Detailed findings, test logs and setup scripts are kept in the project repository: <code>docs/stage1-findings.md</code>, <code>docs/stage2-poc.md</code>, <code>docs/licensing-service-description.md</code>.
+    Prepared for the Street Blackjack Radio project. Full documentation is kept in the project repository: admin guide, API reference, deployment guide, test results, and the licensing service description.
   </footer>
 </div>
