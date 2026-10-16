@@ -61,10 +61,14 @@ function proxy(req, res, target, { stream = false } = {}) {
     'if-none-match': req.headers['if-none-match'],
     origin: req.headers.origin,
     host: `${target.host}:${target.port}`,
-    'x-forwarded-proto': proto,
-    'x-forwarded-host': host,
     'x-forwarded-for': req.socket.remoteAddress,
   };
+  // The registry builds stream URLs from the client's address. AzuraCast must NOT get these:
+  // it rejects a forwarded host that includes a port ("localhost:8088") with HTTP 500.
+  if (target === REGISTRY) {
+    headers['x-forwarded-proto'] = proto;
+    headers['x-forwarded-host'] = host;
+  }
   for (const k of Object.keys(headers)) if (headers[k] === undefined) delete headers[k];
 
   const up = request({ ...target, method: req.method, path: req.url, headers }, (ur) => {

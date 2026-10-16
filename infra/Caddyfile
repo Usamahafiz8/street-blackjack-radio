@@ -11,6 +11,14 @@
 	@setup path /setup /setup/*
 	respond @setup "Initial setup is only available through the SSH tunnel." 403
 
+	# Optional admin lock-down: everything except what listeners need is only reachable from
+	# ADMIN_ALLOW_IPS (space-separated IPs/CIDRs). Default allows everyone (login + 2FA still apply).
+	@private {
+		not path /listen/* /hls/* /static/* /api/nowplaying /api/nowplaying/* /api/station/*/art/* /api/status
+		not remote_ip {$ADMIN_ALLOW_IPS:0.0.0.0/0 ::/0}
+	}
+	respond @private "Not available." 403
+
 	# Audio streams: never buffer, pass bytes straight through.
 	@streams path /listen/* /hls/*
 	reverse_proxy @streams 127.0.0.1:8080 {
