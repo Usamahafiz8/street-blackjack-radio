@@ -13,7 +13,7 @@ It runs independently of the game. The game's developer integrates it later thro
 ## Status
 
 - **Stage 1 (investigation):** done. See [docs/stage1-findings.md](docs/stage1-findings.md).
-- **Stage 2 (proof of concept):** code built and tested locally; waiting for the test VPS. See [docs/stage2-poc.md](docs/stage2-poc.md) and [docs/stage2-vps-setup.md](docs/stage2-vps-setup.md).
+- **Stage 2 (proof of concept):** running locally on WSL2 - see [docs/stage2-local.md](docs/stage2-local.md); PoC details and tests in [docs/stage2-poc.md](docs/stage2-poc.md); VPS guide kept for later: [docs/stage2-vps-setup.md](docs/stage2-vps-setup.md).
 - Licensing brief for PPL / PRS for Music: [docs/licensing-service-description.md](docs/licensing-service-description.md)
 - Stage 3 (full setup): not started.
 - Stage 4 (testing and handover): not started.
