@@ -21,7 +21,7 @@ before(async () => {
           mounts: [{ url: `http://localhost:18080/listen/${code}/radio.mp3`, format: 'mp3', bitrate: 128, is_default: true }] },
         listeners: { current: 0, unique: 0 }, now_playing: null, is_online: false,
       });
-      return res.end(JSON.stringify([st('streaming'), st('dead')]));
+      return res.end(JSON.stringify([{ ...st('streaming'), now_playing: { song: { title: 'Station Offline' }, playlist: '' } }, st('dead')]));
     }
     if (req.url === '/listen/streaming/radio.mp3') {
       res.writeHead(200, { 'Content-Type': 'audio/mpeg' });
@@ -49,5 +49,6 @@ test('station reported offline but streaming is shown online; a dead one stays o
   const by = Object.fromEntries(registry.list().stations.map((s) => [s.id, s]));
   assert.equal(by.streaming.online, true);
   assert.equal(by.dead.online, false);
+  assert.equal(by.streaming.now_playing, null, 'placeholder title must not be shown');
   assert.equal(by.streaming.stream.url, 'https://radio.example.com/listen/streaming/radio.mp3');
 });

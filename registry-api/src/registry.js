@@ -80,7 +80,12 @@ export class Registry {
             allowInsecure: true, // internal address only, never returned to clients
             fetchImpl: this.fetchImpl,
           });
-          if (check.online) np.is_online = true;
+          if (check.online) {
+            np.is_online = true;
+            // While AzuraCast thinks the station is offline its now-playing is a placeholder
+            // ("Station Offline"), so show nothing rather than a misleading title.
+            np.now_playing = null;
+          }
         }),
     );
   }

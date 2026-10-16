@@ -9,8 +9,10 @@ $Repo = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
 # 1. Keep the WSL distro running (WSL stops idle distros; AzuraCast must run 24/7).
 $keep = Get-CimInstance Win32_Process -Filter "Name='wsl.exe'" | Where-Object { $_.CommandLine -match "$Distro.*sleep infinity" }
 if (-not $keep) {
-  Start-Process -WindowStyle Hidden -FilePath wsl.exe -ArgumentList '-d', $Distro, '-u', 'root', '--', 'sleep', 'infinity' | Out-Null
-  Write-Host "WSL keep-alive started"
+  # Created through WMI so it is NOT a child of this window/terminal: closing the terminal (or the
+  # tool that ran this script) must not end it, or WSL shuts down and takes the radio with it.
+  $r = Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ CommandLine = "wsl.exe -d $Distro -u root -- sleep infinity" }
+  Write-Host "WSL keep-alive started (pid $($r.ProcessId))"
 }
 
 # 2. AzuraCast + registry (inside WSL)
@@ -19,8 +21,9 @@ wsl -d $Distro -u root -- bash -c "cd /root/azuracast && docker compose up -d &&
 # 3. Gateway on Windows (player + registry + audio only)
 $gw = Get-CimInstance Win32_Process -Filter "Name='node.exe'" | Where-Object { $_.CommandLine -match 'gateway\.mjs' }
 if (-not $gw) {
-  Start-Process -WindowStyle Hidden -FilePath node -ArgumentList "$Repo\infra\local\gateway.mjs" `
-    -RedirectStandardOutput "$env:TEMP\sbradio-gateway.log" -RedirectStandardError "$env:TEMP\sbradio-gateway.err" | Out-Null
+  # Also created through WMI so it outlives this window (see keep-alive above).
+  $cmd = "cmd.exe /c node `"$Repo\infra\local\gateway.mjs`" > `"$env:TEMP\sbradio-gateway.log`" 2>&1"
+  Invoke-CimMethod -ClassName Win32_Process -MethodName Create -Arguments @{ CommandLine = $cmd } | Out-Null
   Write-Host "Gateway started on port 8088"
 }
 
