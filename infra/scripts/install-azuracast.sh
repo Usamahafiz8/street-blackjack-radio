@@ -27,14 +27,19 @@ fi
 
 if ! docker ps --format '{{.Names}}' 2>/dev/null | grep -q '^azuracast$'; then
   log "Selecting the STABLE release channel"
-  yes 'Y' | ./docker.sh setup-release || true
+  { yes 'Y' || true; } | ./docker.sh setup-release || true
 
   log "Installing AzuraCast in $AZURACAST_DIR (unattended, defaults). This takes several minutes."
-  yes '' | ./docker.sh install
+  { yes '' || true; } | ./docker.sh install   # 'yes' ends with SIGPIPE; don't let pipefail trip on it
 fi
 
 set_env() { # set_env KEY VALUE  -> in $AZURACAST_DIR/.env
-  if grep -q "^$1=" .env; then sed -i "s|^$1=.*|$1=$2|" .env; else echo "$1=$2" >> .env; fi
+  if grep -q "^$1=" .env; then
+    sed -i "s|^$1=.*|$1=$2|" .env
+  else
+    [[ -s .env && -n "$(tail -c1 .env)" ]] && echo >> .env # file may lack a final newline
+    echo "$1=$2" >> .env
+  fi
 }
 
 log "Moving AzuraCast to internal ports ${AZ_HTTP_PORT} (HTTP) / ${AZ_HTTPS_PORT} (HTTPS)"
