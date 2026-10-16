@@ -96,6 +96,8 @@ async function main() {
   // BASE_URL overrides (local WSL: http://localhost:18080); otherwise https://RADIO_DOMAIN on the VPS.
   if (process.env.BASE_URL) settings.base_url = process.env.BASE_URL;
   else if (domain) settings.base_url = `https://${domain}`;
+  const current = await api('GET', '/admin/settings');
+  if (!current?.setup_complete_time) settings.setup_complete_time = Math.floor(Date.now() / 1000); // finish the first-run wizard
   await api('PUT', '/admin/settings', settings);
   info(`base_url=${settings.base_url || '(unchanged)'}; web proxy for radio on; IP source X-Forwarded-For`);
 
@@ -138,7 +140,15 @@ async function main() {
       });
       info('created mount /radio.mp3 (MP3 128 kbps)');
     } else {
-      info(`mounts: ${mounts.map((m) => `${m.name} (${m.autodj_format || '?'} ${m.autodj_bitrate || '?'}k)`).join(', ')}`);
+      // AzuraCast's default mount is 192 kbps; we standardise on 128 kbps MP3 (bandwidth plan, Stage 1 §3.3).
+      for (const m of mounts) {
+        if (m.is_default && (m.autodj_format !== 'mp3' || m.autodj_bitrate !== 128)) {
+          await api('PUT', `/station/${sid}/mount/${m.id}`, { autodj_format: 'mp3', autodj_bitrate: 128, display_name: '128kbps MP3' });
+          info(`default mount ${m.name} set to MP3 128 kbps (was ${m.autodj_format} ${m.autodj_bitrate}k)`);
+        } else {
+          info(`mount: ${m.name} (${m.autodj_format} ${m.autodj_bitrate}k)`);
+        }
+      }
     }
 
     // Media
@@ -180,7 +190,7 @@ async function main() {
     // Disable AzuraCast's empty auto-created "default" playlist, if any, to keep things tidy.
     for (const pl of playlists) {
       if (pl.name === 'default' && pl.is_enabled && !def.playlists.some((p) => p.name === 'default')) {
-        await api('PUT', `/station/${sid}/playlist/${pl.id}`, { ...pl, is_enabled: false });
+        await api('PUT', `/station/${sid}/playlist/${pl.id}/toggle`);
         info('disabled auto-created "default" playlist');
       }
     }
