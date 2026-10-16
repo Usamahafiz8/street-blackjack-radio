@@ -302,7 +302,9 @@
     if (st) {
       el.nowStation.textContent = st.name;
       el.live.hidden = !(state.wantPlaying && st.online);
-      el.art.src = (st.now_playing && st.now_playing.art_url) || st.artwork_url || 'icons/icon.svg';
+      // Station logo first (always ours, always loads); album art only when there's no logo.
+      const art = st.artwork_url || (st.now_playing && st.now_playing.art_url) || 'icons/icon.svg';
+      if (el.art.getAttribute('src') !== art) el.art.src = art;
       renderNowPlaying(st);
     }
 
@@ -358,6 +360,9 @@
     el.nowMeta.textContent = [np.programme, pos].filter(Boolean).join(' · ');
   }
   setInterval(() => { const st = selected(); if (st) renderNowPlaying(st); }, 1000);
+
+  // Never show a broken image: fall back to the app icon.
+  el.art.addEventListener('error', () => { if (!el.art.src.endsWith('icons/icon.svg')) el.art.src = 'icons/icon.svg'; });
 
   // Controls
   el.power.addEventListener('click', () => (state.radioOn ? powerOff() : play('radio on')));

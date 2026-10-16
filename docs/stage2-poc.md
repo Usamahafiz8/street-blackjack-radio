@@ -135,6 +135,29 @@ curl "localhost:8081/admin/kill/uk_rap?s=20"         # simulate a 20 s stream dr
 | Player at 375 px phone width | ✔ |
 | Continuity checker vs mock (40 s mixes) | PASS: 2 mix changes, 0 s gaps, 0 listeners |
 
+## Results on the real local AzuraCast (WSL2, 16 Oct 2026)
+
+AzuraCast stable on WSL2 Ubuntu 24.04 (see [stage2-local.md](stage2-local.md)). Two stations, each with 4 × 12-minute synthetic mixes, 128 kbps MP3.
+
+| Test | Result |
+|---|---|
+| **Continuous playback, no listeners, 40 min, run 1** | **FAIL, correctly detected.** WSL2's clock ran at 0.965× real time, so every mix took about 12:30. Fixed with chrony (see stage2-local.md). |
+| **Continuous playback, no listeners, 40 min, run 2** | **PASS** for both stations. 160 samples each, 0 listeners throughout, 3 mix changes each (Mix 2→3→4→**1**: the playlist looped by itself), gaps −2 to −4 s (normal short crossfade). [log](results/stage2-continuous.log) · [json](results/stage2-continuous.json) |
+| Stream rate after the clock fix | 127.9 kbps (0.999× real time) |
+| Registry → AzuraCast | Both stations online. Stream, HLS and art URLs follow the client's address (localhost / Wi-Fi / HTTPS tunnel). |
+| External test station (SomaFM) | online |
+| Offline test station | offline, greyed out, not selectable |
+| Player: Play | "Playing live" within about 1 s |
+| Player: switch UK Rap → Afrobeats | switched to Afrobeats' own live position |
+| **Leave and return** | paused at 5:18 into the mix (12:40:13), pressed Play at 12:41:20, and it resumed at **6:25**: +67 s, matching the wall clock. **Joins live, not where it left off.** |
+| Station restart while listening | the stream dropped; the player reconnected automatically within about 2 s |
+| Admin exposure | Through the gateway and the HTTPS tunnel, `/login`, `/dashboard`, `/setup`, `/api/admin/*` and `/api/nowplaying` all return **404**. The admin is only on `http://localhost:18080`. |
+| Audio through the HTTPS tunnel | 200 `audio/mpeg`, HTTPS stream URLs (no mixed content) |
+
+**Behaviour to know:** after a station *restart*, AzuraCast starts the **next** mix from its beginning; it doesn't resume mid-mix. Normal 24/7 running isn't affected.
+
+**Still to do on a real iPhone (you):** lock-screen controls, background playback, and Add to Home Screen. Steps are in [stage2-local.md](stage2-local.md). The full device matrix is in Stage 4.
+
 ## Known limitations at this stage
 - No adverts yet (Stage 3).
 - 2 of 5 stations (Stage 3).
