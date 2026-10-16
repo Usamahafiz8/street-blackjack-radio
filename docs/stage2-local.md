@@ -116,6 +116,25 @@ It prints an `https://…` address. Open that on your iPhone.
 
 ---
 
+## WSL2 clock problem (found and fixed)
+
+The first 40-minute run **failed**, and it was right to:
+- On this PC, WSL2's internal clock ran at **0.965× real time**.
+- Liquidsoap (AzuraCast's playout engine) paces audio on that clock. So each 12:00 mix took about 12:30 of real time.
+- The streams delivered **124 kbps instead of 128 kbps**. That's 3% too little audio, which makes listeners re-buffer every few minutes.
+- WSL hides this by occasionally jumping the date forward, so the time *looks* correct.
+
+**Fix:** `infra/local/fix-wsl-clock.sh` installs **chrony**, which corrects the clock *rate* using the Hyper-V host clock as its reference.
+- After the fix the clock runs at **1.0000×** and the stream at **127.9 kbps (0.999× real time)**.
+- It only affects the WSL VM and stays on after restarts.
+- Undo with: `wsl -d Ubuntu-24.04 -u root -- apt-get remove -y chrony`.
+- `setup-wsl.sh` now applies it automatically.
+- A real Linux server keeps proper time with NTP, so this is **not** a production issue. Still, Stage 4 will include the same stream-rate check on the server.
+
+Run 1 is kept in `docs/results/stage2-continuous-run1-wsl-clock-drift.*`.
+
+---
+
 ## Tests (after I've created the stations)
 These are the same tests as [stage2-poc.md](stage2-poc.md#how-you-can-check-it-yourself). Use **http://localhost:8088** on this PC, or the tunnel address on your phone.
 
