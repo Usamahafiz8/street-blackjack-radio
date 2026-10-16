@@ -1,0 +1,10 @@
+
+
+ [OK] Backup complete in 0.66 seconds.                                          
+
+total 40
+drwxr-xr-x 2 azuracast azuracast  4096 Oct 16 21:17 .
+drwx------ 1 azuracast azuracast  4096 Aug  9 03:15 ..
+-rw-r--r-- 1 azuracast azuracast 26532 Oct 16 21:17 stage4-test.zip
+./tmp/azuracast_backup_mariadb/db.sql
+236K	.

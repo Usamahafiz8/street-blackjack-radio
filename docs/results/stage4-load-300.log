@@ -1,0 +1,16 @@
+Opening 300 listeners over 5 stations...
+
+Listeners: 300  measured over 50 s (after a 10 s warm-up)
+Full real-time rate (>= 97% of 128 kbps): 300/300
+Errors / dropped: 0
+Per-listener rate: min 127.8 kbps, median 128.2 kbps, max 128.6 kbps
+Total outbound: 38.5 Mbit/s
+RESULT: PASS
+--- AzuraCast container during the test (every 10 s):
+azuracast CPU 76.51% MEM 1.091GiB / 11.57GiB
+azuracast CPU 28.25% MEM 1.092GiB / 11.57GiB
+azuracast CPU 33.10% MEM 1.093GiB / 11.57GiB
+azuracast CPU 105.47% MEM 1.092GiB / 11.57GiB
+azuracast CPU 65.64% MEM 1.136GiB / 11.57GiB
+azuracast CPU 37.57% MEM 1.115GiB / 11.57GiB
+--- host CPUs: 8

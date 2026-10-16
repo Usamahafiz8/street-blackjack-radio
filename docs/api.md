@@ -128,7 +128,7 @@ CORS_ORIGINS=https://play.streetblackjack.com,https://*.streetblackjack.com,http
 - Send the radio team your game's exact origin(s), including staging.
 - Wildcard sub-domains (`https://*.example.com`) are supported.
 - Preflight (`OPTIONS`) is handled automatically and cached for 24 h.
-- **The audio streams don't need CORS** when played with an `<audio>` element. They only need it if you route them through the Web Audio API (see the iOS section). AzuraCast/Icecast streams send `Access-Control-Allow-Origin: *` anyway.
+- **The audio streams don't need CORS** when played with an `<audio>` element. They only need it if you route them through the Web Audio API (see the iOS section). AzuraCast's Icecast streams echo the requesting origin in `Access-Control-Allow-Origin` anyway (checked on the test server).
 - Native apps (not browsers) aren't affected by CORS at all.
 
 ---

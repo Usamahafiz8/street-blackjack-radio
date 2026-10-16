@@ -1,0 +1,20 @@
+[
+  {
+    "device": "iPhone 13",
+    "status": "Playing live",
+    "volumeSlider": false,
+    "volumeNote": true,
+    "stations": 7,
+    "horizontalScroll": false,
+    "mediaSession": true
+  },
+  {
+    "device": "Pixel 7",
+    "status": "Playing live",
+    "volumeSlider": true,
+    "volumeNote": false,
+    "stations": 7,
+    "horizontalScroll": false,
+    "mediaSession": true
+  }
+]
