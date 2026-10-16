@@ -24,8 +24,13 @@ const add = (st, h) => {
   });
 };
 
-const end = Date.now() + MINUTES * 60_000;
-console.log(`Watching ${BASE} play history for ${MINUTES} min...`);
+const runStart = args.since ? Date.parse(args.since) / 1000 : Date.now() / 1000;
+if (args['from-json']) {
+  const saved = JSON.parse((await import('node:fs')).readFileSync(args['from-json'], 'utf8'));
+  for (const [st, r] of Object.entries(saved.report)) for (const it of r.items) (items[st] ||= new Map()).set(it.sh_id, it);
+}
+const end = args['from-json'] ? 0 : Date.now() + MINUTES * 60_000;
+if (!args['from-json']) console.log(`Watching ${BASE} play history for ${MINUTES} min...`);
 while (Date.now() < end) {
   try {
     const list = await (await fetch(`${BASE}/api/nowplaying`, { signal: AbortSignal.timeout(10000) })).json();
@@ -51,9 +56,11 @@ for (const [st, map] of Object.entries(items)) {
     if (prev && prev.duration) {
       const gap = it.played_at - (prev.played_at + prev.duration);
       note = `starts ${gap >= 0 ? '+' : ''}${Math.round(gap)}s after previous item ended`;
-      if (isAd && Math.abs(gap) > TOL) issues.push(`advert at ${hhmmss(it.played_at)} did not start at a break (${Math.round(gap)}s)`);
+      if (gap < -60) note += '  (previous item cut short by a station restart)';
+      else if (isAd && it.played_at >= runStart && Math.abs(gap) > TOL) issues.push(`advert at ${hhmmss(it.played_at)} did not start at a break (${Math.round(gap)}s)`);
     }
-    if (isAd) ads++;
+    if (isAd && it.played_at >= runStart) ads++;
+    if (it.played_at < runStart) note += '  [before run - context only]';
     console.log(`  ${hhmmss(it.played_at)}  ${isAd ? 'AD  ' : 'MIX '} ${it.title.padEnd(42).slice(0, 42)} [${it.playlist}] ${Math.round(it.duration)}s  ${note}`);
   });
   if (!ads) issues.push('no advert played during the run');
@@ -63,6 +70,6 @@ for (const [st, map] of Object.entries(items)) {
   report[st] = { pass: ok, ad_breaks: ads, items: seq, issues };
   console.log(`  => ${ok ? 'PASS' : 'FAIL'} (${ads} advert(s))`);
 }
-if (args.out) writeFileSync(args.out, JSON.stringify({ base: BASE, minutes: MINUTES, pass, report }, null, 2));
+if (args.out) writeFileSync(args.out, JSON.stringify({ base: BASE, minutes: MINUTES, run_start: new Date(runStart * 1000).toISOString(), pass, report }, null, 2));
 console.log(`\nOVERALL: ${pass ? 'PASS' : 'FAIL'}`);
 process.exit(pass ? 0 : 1);

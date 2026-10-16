@@ -1,1 +1,65 @@
-Watching http://localhost:18080 play history for 28 min...
+
+uk_rap
+  20:48:25  MIX  Test Mix 2                                 [Rotation] 720s    [before run - context only]
+  21:00:21  MIX  Test Mix 3                                 [Rotation] 720s  starts -4s after previous item ended  [before run - context only]
+  21:06:59  MIX  Test Mix 3                                 [Rotation] 720s  starts -322s after previous item ended  (previous item cut short by a station restart)  [before run - context only]
+  21:08:23  MIX  Test Mix 1                                 [Rotation] 720s  starts -636s after previous item ended  (previous item cut short by a station restart)  [before run - context only]
+  21:13:24  AD   Street Blackjack Tournament Promo          [Ads - UK Rap] 9s  starts -419s after previous item ended  (previous item cut short by a station restart)  [before run - context only]
+  21:13:28  MIX  Test Mix 1                                 [Rotation] 720s  starts -5s after previous item ended  [before run - context only]
+  21:25:25  AD   Street Blackjack Tournament Promo          [Ads - UK Rap] 9s  starts -3s after previous item ended
+  21:25:32  MIX  Test Mix 2                                 [Rotation] 720s  starts -2s after previous item ended
+  21:37:29  AD   Street Blackjack Tournament Promo          [Ads - UK Rap] 9s  starts -3s after previous item ended
+  21:37:36  MIX  Test Mix 3                                 [Rotation] 720s  starts -2s after previous item ended
+  => PASS (2 advert(s))
+
+dancehall
+  21:07:26  AD   Street Blackjack New Tables Promo          [Ads - Dancehall] 8s    [before run - context only]
+  21:07:31  MIX  Test Mix 4                                 [Friday Night Dancehall] 720s  starts -3s after previous item ended  [before run - context only]
+  21:08:46  AD   Street Blackjack New Tables Promo          [Ads - Dancehall] 8s  starts -645s after previous item ended  (previous item cut short by a station restart)  [before run - context only]
+  21:08:51  MIX  Test Mix 4                                 [Friday Night Dancehall] 720s  starts -3s after previous item ended  [before run - context only]
+  21:13:24  AD   Street Blackjack New Tables Promo          [Ads - Dancehall] 8s  starts -447s after previous item ended  (previous item cut short by a station restart)  [before run - context only]
+  21:13:28  MIX  Test Mix 4                                 [Friday Night Dancehall] 720s  starts -4s after previous item ended  [before run - context only]
+  21:25:25  AD   Street Blackjack New Tables Promo          [Ads - Dancehall] 8s  starts -3s after previous item ended
+  21:25:30  MIX  Test Mix 4                                 [Friday Night Dancehall] 720s  starts -3s after previous item ended
+  21:37:27  AD   Test Sponsor A                             [Ads - Dancehall] 7s  starts -3s after previous item ended
+  21:37:32  MIX  Test Mix 4                                 [Friday Night Dancehall] 720s  starts -2s after previous item ended
+  => PASS (2 advert(s))
+
+afrobeats
+  20:43:26  MIX  Test Mix 2                                 [Rotation] 720s    [before run - context only]
+  20:55:23  MIX  Test Mix 3                                 [Rotation] 720s  starts -3s after previous item ended  [before run - context only]
+  21:07:10  MIX  Test Mix 2                                 [Rotation] 720s  starts -13s after previous item ended  [before run - context only]
+  21:08:35  MIX  Test Mix 1                                 [Rotation] 720s  starts -635s after previous item ended  (previous item cut short by a station restart)  [before run - context only]
+  21:13:24  AD   Test Sponsor B                             [Ads - Afrobeats] 7s  starts -431s after previous item ended  (previous item cut short by a station restart)  [before run - context only]
+  21:13:27  MIX  Test Mix 1                                 [Rotation] 720s  starts -4s after previous item ended  [before run - context only]
+  21:25:24  AD   Test Sponsor B                             [Ads - Afrobeats] 7s  starts -3s after previous item ended
+  21:25:28  MIX  Test Mix 2                                 [Rotation] 720s  starts -3s after previous item ended
+  21:37:25  AD   Test Sponsor B                             [Ads - Afrobeats] 7s  starts -3s after previous item ended
+  21:37:30  MIX  Test Mix 3                                 [Rotation] 720s  starts -2s after previous item ended
+  => PASS (2 advert(s))
+
+oldschool
+  21:09:10  AD   Street Blackjack Tournament Promo          [Ads - Old School] 9s    [before run - context only]
+  21:09:16  MIX  Long Test Mix 1 (Part 1 of 4)              [Rotation] 720s  starts -3s after previous item ended  [before run - context only]
+  21:13:34  AD   Street Blackjack Tournament Promo          [Ads - Old School] 9s  starts -462s after previous item ended  (previous item cut short by a station restart)  [before run - context only]
+  21:13:40  MIX  Long Test Mix 1 (Part 1 of 4)              [Rotation] 720s  starts -3s after previous item ended  [before run - context only]
+  21:25:38  AD   Street Blackjack Tournament Promo          [Ads - Old School] 9s  starts -2s after previous item ended
+  21:25:45  MIX  Long Test Mix 1 (Part 2 of 4)              [Rotation] 721s  starts -2s after previous item ended
+  21:37:43  AD   Street Blackjack New Tables Promo          [Ads - Old School] 8s  starts -3s after previous item ended
+  21:37:48  MIX  Long Test Mix 1 (Part 3 of 4)              [Rotation] 721s  starts -3s after previous item ended
+  => PASS (2 advert(s))
+
+rnb
+  21:07:41  AD   Street Blackjack Tournament Promo          [Ads - R&B] 9s    [before run - context only]
+  21:07:47  MIX  Test Mix 1                                 [Rotation] 720s  starts -3s after previous item ended  [before run - context only]
+  21:08:58  AD   Street Blackjack Tournament Promo          [Ads - R&B] 9s  starts -649s after previous item ended  (previous item cut short by a station restart)  [before run - context only]
+  21:09:04  MIX  Test Mix 3                                 [Rotation] 720s  starts -3s after previous item ended  [before run - context only]
+  21:13:34  AD   Street Blackjack Tournament Promo          [Ads - R&B] 9s  starts -450s after previous item ended  (previous item cut short by a station restart)  [before run - context only]
+  21:13:40  MIX  Test Mix 1                                 [Rotation] 720s  starts -3s after previous item ended  [before run - context only]
+  21:25:37  AD   Street Blackjack Tournament Promo          [Ads - R&B] 9s  starts -3s after previous item ended
+  21:25:44  MIX  Test Mix 2                                 [Rotation] 720s  starts -2s after previous item ended
+  21:37:41  AD   Test Sponsor B                             [Ads - R&B] 7s  starts -3s after previous item ended
+  21:37:46  MIX  Test Mix 3                                 [Rotation] 720s  starts -2s after previous item ended
+  => PASS (2 advert(s))
+
+OVERALL: PASS

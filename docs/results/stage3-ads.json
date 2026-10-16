@@ -1,0 +1,379 @@
+{
+  "base": "http://localhost:18080",
+  "minutes": 30,
+  "run_start": "2026-10-16T21:14:11.000Z",
+  "pass": true,
+  "report": {
+    "uk_rap": {
+      "pass": true,
+      "ad_breaks": 2,
+      "items": [
+        {
+          "sh_id": 30,
+          "played_at": 1792183705,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 2"
+        },
+        {
+          "sh_id": 32,
+          "played_at": 1792184421,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 3"
+        },
+        {
+          "sh_id": 33,
+          "played_at": 1792184819,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 3"
+        },
+        {
+          "sh_id": 39,
+          "played_at": 1792184903,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 1"
+        },
+        {
+          "sh_id": 47,
+          "played_at": 1792185204,
+          "duration": 9,
+          "playlist": "Ads - UK Rap",
+          "title": "Street Blackjack Tournament Promo"
+        },
+        {
+          "sh_id": 52,
+          "played_at": 1792185208,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 1"
+        },
+        {
+          "sh_id": 59,
+          "played_at": 1792185925,
+          "duration": 9,
+          "playlist": "Ads - UK Rap",
+          "title": "Street Blackjack Tournament Promo"
+        },
+        {
+          "sh_id": 62,
+          "played_at": 1792185932,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 2"
+        },
+        {
+          "sh_id": 69,
+          "played_at": 1792186649,
+          "duration": 9,
+          "playlist": "Ads - UK Rap",
+          "title": "Street Blackjack Tournament Promo"
+        },
+        {
+          "sh_id": 72,
+          "played_at": 1792186656,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 3"
+        }
+      ],
+      "issues": []
+    },
+    "dancehall": {
+      "pass": true,
+      "ad_breaks": 2,
+      "items": [
+        {
+          "sh_id": 35,
+          "played_at": 1792184846,
+          "duration": 8,
+          "playlist": "Ads - Dancehall",
+          "title": "Street Blackjack New Tables Promo"
+        },
+        {
+          "sh_id": 36,
+          "played_at": 1792184851,
+          "duration": 720,
+          "playlist": "Friday Night Dancehall",
+          "title": "Test Mix 4"
+        },
+        {
+          "sh_id": 41,
+          "played_at": 1792184926,
+          "duration": 8,
+          "playlist": "Ads - Dancehall",
+          "title": "Street Blackjack New Tables Promo"
+        },
+        {
+          "sh_id": 42,
+          "played_at": 1792184931,
+          "duration": 720,
+          "playlist": "Friday Night Dancehall",
+          "title": "Test Mix 4"
+        },
+        {
+          "sh_id": 49,
+          "played_at": 1792185204,
+          "duration": 8,
+          "playlist": "Ads - Dancehall",
+          "title": "Street Blackjack New Tables Promo"
+        },
+        {
+          "sh_id": 51,
+          "played_at": 1792185208,
+          "duration": 720,
+          "playlist": "Friday Night Dancehall",
+          "title": "Test Mix 4"
+        },
+        {
+          "sh_id": 58,
+          "played_at": 1792185925,
+          "duration": 8,
+          "playlist": "Ads - Dancehall",
+          "title": "Street Blackjack New Tables Promo"
+        },
+        {
+          "sh_id": 61,
+          "played_at": 1792185930,
+          "duration": 720,
+          "playlist": "Friday Night Dancehall",
+          "title": "Test Mix 4"
+        },
+        {
+          "sh_id": 68,
+          "played_at": 1792186647,
+          "duration": 7,
+          "playlist": "Ads - Dancehall",
+          "title": "Test Sponsor A"
+        },
+        {
+          "sh_id": 71,
+          "played_at": 1792186652,
+          "duration": 720,
+          "playlist": "Friday Night Dancehall",
+          "title": "Test Mix 4"
+        }
+      ],
+      "issues": []
+    },
+    "afrobeats": {
+      "pass": true,
+      "ad_breaks": 2,
+      "items": [
+        {
+          "sh_id": 28,
+          "played_at": 1792183406,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 2"
+        },
+        {
+          "sh_id": 31,
+          "played_at": 1792184123,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 3"
+        },
+        {
+          "sh_id": 34,
+          "played_at": 1792184830,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 2"
+        },
+        {
+          "sh_id": 40,
+          "played_at": 1792184915,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 1"
+        },
+        {
+          "sh_id": 48,
+          "played_at": 1792185204,
+          "duration": 7,
+          "playlist": "Ads - Afrobeats",
+          "title": "Test Sponsor B"
+        },
+        {
+          "sh_id": 50,
+          "played_at": 1792185207,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 1"
+        },
+        {
+          "sh_id": 57,
+          "played_at": 1792185924,
+          "duration": 7,
+          "playlist": "Ads - Afrobeats",
+          "title": "Test Sponsor B"
+        },
+        {
+          "sh_id": 60,
+          "played_at": 1792185928,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 2"
+        },
+        {
+          "sh_id": 67,
+          "played_at": 1792186645,
+          "duration": 7,
+          "playlist": "Ads - Afrobeats",
+          "title": "Test Sponsor B"
+        },
+        {
+          "sh_id": 70,
+          "played_at": 1792186650,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 3"
+        }
+      ],
+      "issues": []
+    },
+    "oldschool": {
+      "pass": true,
+      "ad_breaks": 2,
+      "items": [
+        {
+          "sh_id": 45,
+          "played_at": 1792184950,
+          "duration": 9,
+          "playlist": "Ads - Old School",
+          "title": "Street Blackjack Tournament Promo"
+        },
+        {
+          "sh_id": 46,
+          "played_at": 1792184956,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Long Test Mix 1 (Part 1 of 4)"
+        },
+        {
+          "sh_id": 53,
+          "played_at": 1792185214,
+          "duration": 9,
+          "playlist": "Ads - Old School",
+          "title": "Street Blackjack Tournament Promo"
+        },
+        {
+          "sh_id": 55,
+          "played_at": 1792185220,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Long Test Mix 1 (Part 1 of 4)"
+        },
+        {
+          "sh_id": 64,
+          "played_at": 1792185938,
+          "duration": 9,
+          "playlist": "Ads - Old School",
+          "title": "Street Blackjack Tournament Promo"
+        },
+        {
+          "sh_id": 66,
+          "played_at": 1792185945,
+          "duration": 721,
+          "playlist": "Rotation",
+          "title": "Long Test Mix 1 (Part 2 of 4)"
+        },
+        {
+          "sh_id": 74,
+          "played_at": 1792186663,
+          "duration": 8,
+          "playlist": "Ads - Old School",
+          "title": "Street Blackjack New Tables Promo"
+        },
+        {
+          "sh_id": 76,
+          "played_at": 1792186668,
+          "duration": 721,
+          "playlist": "Rotation",
+          "title": "Long Test Mix 1 (Part 3 of 4)"
+        }
+      ],
+      "issues": []
+    },
+    "rnb": {
+      "pass": true,
+      "ad_breaks": 2,
+      "items": [
+        {
+          "sh_id": 37,
+          "played_at": 1792184861,
+          "duration": 9,
+          "playlist": "Ads - R&B",
+          "title": "Street Blackjack Tournament Promo"
+        },
+        {
+          "sh_id": 38,
+          "played_at": 1792184867,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 1"
+        },
+        {
+          "sh_id": 43,
+          "played_at": 1792184938,
+          "duration": 9,
+          "playlist": "Ads - R&B",
+          "title": "Street Blackjack Tournament Promo"
+        },
+        {
+          "sh_id": 44,
+          "played_at": 1792184944,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 3"
+        },
+        {
+          "sh_id": 54,
+          "played_at": 1792185214,
+          "duration": 9,
+          "playlist": "Ads - R&B",
+          "title": "Street Blackjack Tournament Promo"
+        },
+        {
+          "sh_id": 56,
+          "played_at": 1792185220,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 1"
+        },
+        {
+          "sh_id": 63,
+          "played_at": 1792185937,
+          "duration": 9,
+          "playlist": "Ads - R&B",
+          "title": "Street Blackjack Tournament Promo"
+        },
+        {
+          "sh_id": 65,
+          "played_at": 1792185944,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 2"
+        },
+        {
+          "sh_id": 73,
+          "played_at": 1792186661,
+          "duration": 7,
+          "playlist": "Ads - R&B",
+          "title": "Test Sponsor B"
+        },
+        {
+          "sh_id": 75,
+          "played_at": 1792186666,
+          "duration": 720,
+          "playlist": "Rotation",
+          "title": "Test Mix 3"
+        }
+      ],
+      "issues": []
+    }
+  }
+}

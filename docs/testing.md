@@ -23,10 +23,10 @@ Key: ✅ pass · ❌ failed (fixed and re-tested) · ⏳ to do (needs real devic
 
 | # | Test | Method | Result |
 |---|---|---|---|
-| B1 | Each station plays its **own** adverts | `check-ads.mjs`, 28 min, play history of all 5 stations | ADS_RESULT_B1 |
-| B2 | Adverts start **only at a break**, never inside a mix | Same: every advert's start compared with the previous item's end | ADS_RESULT_B2 |
+| B1 | Each station plays its **own** adverts | `check-ads.mjs`, 28 min, play history of all 5 stations | ✅ All 5 stations played their own adverts during the 28-min run (2 breaks each, 10 total): UK Rap tournament promo, Afrobeats Sponsor B, Dancehall New Tables / Sponsor A, R&B tournament / Sponsor B, Old School tournament / New Tables. [log](results/stage3-ads.log) |
+| B2 | Adverts start **only at a break**, never inside a mix | Same: every advert's start compared with the previous item's end | ✅ Every advert started when the previous mix ended (2–3 s overlap = crossfade); the mix after it then started on cue. The first automated pass ❌ flagged adverts from *before* the run, around station restarts (the setup script and a WSL restart). The checker now judges only the run window and labels restart cuts; raw data is kept in `results/stage3-ads-raw.json`. |
 | B3 | Ad break shown as "Ad break" (no advert title) to players | Registry unit test + `Ads`/`Promo` naming rule | ✅ |
-| B4 | Scheduled show stored and on AzuraCast's calendar | "Friday Night Dancehall" Fri 20:00–23:00; `/api/station/3/schedule` | ✅ Listed as a scheduled event (the window itself falls on a Friday evening, so it wasn't watched live) |
+| B4 | Scheduled show stored and on AzuraCast's calendar | "Friday Night Dancehall" Fri 20:00–23:00; `/api/station/3/schedule` | ✅ Listed as a scheduled event, **and observed live**: the advert test ran on Friday evening UK time, and Dancehall played the scheduled show playlist instead of its Rotation (see the ads log). SCHEDULE_END_RESULT |
 | B5 | Date-limited campaign | "Promo – DJ Night campaign", 17–24 Oct, every 30 min | ✅ Start and end dates saved |
 
 ## C. Player (desktop Chrome, real local server)
