@@ -1,0 +1,16 @@
+{
+  "name": "sbr-registry-api",
+  "version": "0.2.0",
+  "description": "Street Blackjack Radio - Station Registry API. Merges AzuraCast public Now Playing data with external stations into one list.",
+  "type": "module",
+  "private": true,
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "license": "UNLICENSED"
+}

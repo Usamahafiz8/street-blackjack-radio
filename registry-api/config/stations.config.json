@@ -1,0 +1,48 @@
+{
+  "_comment": "Station Registry config. AzuraCast stations appear automatically; 'overrides' (keyed by AzuraCast short name) only change how they are displayed. External stations are listed under 'external'. Changes are picked up without a restart.",
+  "azuracast": {
+    "hide_playlists_matching": ["^ads?\\b", "advert", "promo", "sponsor", "jingle", "station id"],
+    "overrides": {
+      "uk_rap": {
+        "id": "uk-rap",
+        "name": "UK Rap / Drill / Grime",
+        "genre": "UK Rap",
+        "order": 10,
+        "artwork": "uk-rap.svg"
+      },
+      "afrobeats": {
+        "id": "afrobeats",
+        "name": "Afrobeats / Amapiano",
+        "genre": "Afrobeats",
+        "order": 20,
+        "artwork": "afrobeats.svg"
+      }
+    }
+  },
+  "external": [
+    {
+      "id": "external-test",
+      "enabled": true,
+      "name": "External Test (SomaFM Groove Salad)",
+      "genre": "Test station - development only",
+      "description": "Public test stream used during development until OnTop FM's URL is available. Not for production.",
+      "stream_url": "https://ice2.somafm.com/groovesalad-128-mp3",
+      "format": "mp3",
+      "bitrate": 128,
+      "order": 90,
+      "artwork": "external-test.svg"
+    },
+    {
+      "id": "offline-test",
+      "enabled": true,
+      "name": "Offline Test Station",
+      "genre": "Test - always offline",
+      "description": "Deliberately broken URL, used to prove offline stations are shown as offline. Remove before launch.",
+      "stream_url": "https://offline-test.invalid/stream.mp3",
+      "format": "mp3",
+      "bitrate": 128,
+      "order": 99,
+      "artwork": "offline-test.svg"
+    }
+  ]
+}

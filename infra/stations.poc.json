@@ -1,0 +1,29 @@
+{
+  "_comment": "Stage 2 proof-of-concept stations. Used by infra/scripts/provision-stations.mjs. Media folders are on the server under /opt/sbradio/test-audio/<short_name>.",
+  "settings": {
+    "timezone": "Europe/London"
+  },
+  "fallback_file": "fallback.mp3",
+  "stations": [
+    {
+      "name": "UK Rap / Drill / Grime",
+      "short_name": "uk_rap",
+      "description": "UK Rap, Drill and Grime - 24/7",
+      "genre": "UK Rap",
+      "media_dir": "uk_rap",
+      "playlists": [
+        { "name": "Rotation", "type": "default", "order": "sequential", "weight": 3 }
+      ]
+    },
+    {
+      "name": "Afrobeats / Amapiano",
+      "short_name": "afrobeats",
+      "description": "Afrobeats and Amapiano - 24/7",
+      "genre": "Afrobeats",
+      "media_dir": "afrobeats",
+      "playlists": [
+        { "name": "Rotation", "type": "default", "order": "sequential", "weight": 3 }
+      ]
+    }
+  ]
+}

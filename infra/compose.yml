@@ -1,0 +1,47 @@
+# Street Blackjack Radio - services that run alongside AzuraCast.
+# AzuraCast itself is installed separately in /var/azuracast with its own Docker setup.
+#
+# Run on the server with:
+#   docker compose --env-file /opt/sbradio/config/sbradio.env up -d --build
+name: sbradio
+
+services:
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    network_mode: host # needs ports 80/443 and to reach 127.0.0.1:8080 / :3000
+    environment:
+      RADIO_DOMAIN: ${RADIO_DOMAIN}
+      API_DOMAIN: ${API_DOMAIN}
+      PLAYER_DOMAIN: ${PLAYER_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ../player:/srv/player:ro
+      - /opt/sbradio/generated:/srv/generated:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+  registry:
+    build: ../registry-api
+    restart: unless-stopped
+    environment:
+      AZURACAST_INTERNAL_URL: http://host.docker.internal:8080
+      AZURACAST_PUBLIC_URL: https://${RADIO_DOMAIN}
+      PUBLIC_BASE_URL: https://${API_DOMAIN}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      STATIONS_CONFIG: /app/config/stations.config.json
+      STATE_DIR: /data
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - 127.0.0.1:3000:3000 # only reachable through Caddy
+    volumes:
+      # Directory mount so edits to stations.config.json are picked up live.
+      - ../registry-api/config:/app/config:ro
+      - registry_data:/data
+
+volumes:
+  caddy_data:
+  caddy_config:
+  registry_data:

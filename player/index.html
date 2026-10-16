@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Street Blackjack Radio</title>
+  <meta name="description" content="Street Blackjack Radio - test player">
+  <meta name="theme-color" content="#111318">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SBJ Radio">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <main class="app">
+    <header class="top">
+      <h1>Street Blackjack Radio</h1>
+      <button id="power" class="power" aria-pressed="false" title="Radio on/off">
+        <span class="power-dot" aria-hidden="true"></span><span id="power-label">Radio OFF</span>
+      </button>
+    </header>
+
+    <div id="banner" class="banner" hidden></div>
+
+    <section class="now" aria-live="polite">
+      <img id="art" class="art" alt="" src="icons/icon.svg">
+      <div class="now-text">
+        <div class="station-line">
+          <span id="live-badge" class="badge" hidden>LIVE</span>
+          <span id="now-station">No station selected</span>
+        </div>
+        <div id="now-title" class="title">Choose a station below</div>
+        <div id="now-meta" class="meta"></div>
+        <div id="status" class="status">Radio is off</div>
+      </div>
+    </section>
+
+    <section class="controls" aria-label="Playback controls">
+      <button id="playpause" class="btn primary" aria-label="Play">▶ Play</button>
+      <button id="mute" class="btn" aria-pressed="false" aria-label="Mute">🔊 Mute</button>
+      <label id="volume-wrap" class="volume">
+        <span class="sr">Volume</span>
+        <input id="volume" type="range" min="0" max="1" step="0.01" value="0.8">
+      </label>
+      <span id="volume-note" class="note" hidden>Use your device's volume buttons</span>
+    </section>
+
+    <section aria-labelledby="stations-h">
+      <h2 id="stations-h">Stations</h2>
+      <ul id="stations" class="stations"></ul>
+    </section>
+
+    <details class="diag">
+      <summary>Diagnostics</summary>
+      <p class="note">API: <code id="api-base"></code></p>
+      <ol id="log" class="log"></ol>
+    </details>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

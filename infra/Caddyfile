@@ -1,0 +1,42 @@
+# Caddy sits in front of everything on ports 80/443 and handles HTTPS certificates
+# automatically. AzuraCast itself listens only on 8080 (blocked from the internet).
+{
+	email {$ACME_EMAIL}
+}
+
+# AzuraCast: admin dashboard, public API and the audio streams (/listen/..., /hls/...)
+{$RADIO_DOMAIN} {
+	# First-time setup is only allowed through the SSH tunnel, so nobody else can
+	# claim the admin account between installation and setup.
+	@setup path /setup /setup/*
+	respond @setup "Initial setup is only available through the SSH tunnel." 403
+
+	# Audio streams: never buffer, pass bytes straight through.
+	@streams path /listen/* /hls/*
+	reverse_proxy @streams 127.0.0.1:8080 {
+		flush_interval -1
+	}
+
+	reverse_proxy 127.0.0.1:8080
+}
+
+# Station Registry API
+{$API_DOMAIN} {
+	encode gzip
+	reverse_proxy 127.0.0.1:3000
+}
+
+# Standalone test player (static files)
+{$PLAYER_DOMAIN} {
+	encode gzip
+	header /sw.js Cache-Control "no-cache"
+	header /config.js Cache-Control "no-cache"
+	handle /config.js {
+		root * /srv/generated
+		file_server
+	}
+	handle {
+		root * /srv/player
+		file_server
+	}
+}
