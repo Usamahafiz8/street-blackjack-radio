@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { AUTO_ORIGIN } from './config.js';
 
 const ART_TYPES = { svg: 'image/svg+xml', png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp' };
 
@@ -31,8 +32,20 @@ export function createApp(registry, cfg) {
     return h;
   };
 
+  // The origin the client used (scheme://host[:port]), for "auto" public URLs.
+  const requestOrigin = (req) => {
+    const fwdProto = cfg.trustProxyHeaders ? String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim() : '';
+    const fwdHost = cfg.trustProxyHeaders ? String(req.headers['x-forwarded-host'] || '').split(',')[0].trim() : '';
+    const proto = fwdProto === 'https' || fwdProto === 'http' ? fwdProto : 'http';
+    const host = fwdHost || req.headers.host || 'localhost';
+    return /^[A-Za-z0-9.\-:[\]]+$/.test(host) ? `${proto}://${host}` : 'http://localhost';
+  };
+
   const send = (req, res, status, body, extra = {}) => {
-    const payload = typeof body === 'string' || Buffer.isBuffer(body) ? body : JSON.stringify(body);
+    let payload = typeof body === 'string' || Buffer.isBuffer(body) ? body : JSON.stringify(body);
+    if (typeof payload === 'string' && payload.includes(AUTO_ORIGIN)) {
+      payload = payload.replaceAll(AUTO_ORIGIN, requestOrigin(req));
+    }
     res.writeHead(status, {
       'Content-Type': 'application/json; charset=utf-8',
       'X-Content-Type-Options': 'nosniff',

@@ -4,16 +4,26 @@ import { fileURLToPath } from 'node:url';
 const trimSlash = (s) => (s || '').replace(/\/+$/, '');
 const num = (v, d) => (v === undefined || v === '' ? d : Number(v));
 
+// Used when AZURACAST_PUBLIC_URL / PUBLIC_BASE_URL are "auto": URLs are built with this
+// placeholder and replaced per request with the origin the client actually used
+// (local development: localhost, LAN IP and a temporary HTTPS tunnel at the same time).
+export const AUTO_ORIGIN = 'https://sbr-request-origin.invalid';
+
 export function loadConfig(env = process.env) {
+  const autoOr = (v) => (v === 'auto' ? AUTO_ORIGIN : trimSlash(v));
   const cfg = {
     port: num(env.PORT, 3000),
     host: env.HOST || '0.0.0.0',
     // URL the registry uses to reach AzuraCast (inside the server, plain HTTP is fine).
     azuracastInternalUrl: trimSlash(env.AZURACAST_INTERNAL_URL || env.AZURACAST_PUBLIC_URL),
-    // Public HTTPS origin of AzuraCast. Any stream/art URL is rewritten to this origin.
-    azuracastPublicUrl: trimSlash(env.AZURACAST_PUBLIC_URL),
-    // Public HTTPS origin of this API (used to build artwork URLs).
-    publicBaseUrl: trimSlash(env.PUBLIC_BASE_URL),
+    // Public HTTPS origin of AzuraCast. Any stream/art URL is rewritten to this origin. "auto" = per request.
+    azuracastPublicUrl: autoOr(env.AZURACAST_PUBLIC_URL),
+    // Other host:port values AzuraCast may use in its URLs (e.g. its base_url), comma-separated.
+    azuracastAliasHosts: (env.AZURACAST_ALIAS_HOSTS || '').split(',').map((s) => s.trim()).filter(Boolean),
+    // Public origin of this API (used to build artwork URLs). "auto" = per request.
+    publicBaseUrl: autoOr(env.PUBLIC_BASE_URL),
+    // Trust X-Forwarded-Proto/Host from the reverse proxy in front (needed for "auto").
+    trustProxyHeaders: env.TRUST_PROXY_HEADERS === 'true',
     pollIntervalMs: num(env.POLL_INTERVAL_MS, 10_000),
     externalCheckIntervalMs: num(env.EXTERNAL_CHECK_INTERVAL_MS, 60_000),
     requestTimeoutMs: num(env.REQUEST_TIMEOUT_MS, 8_000),

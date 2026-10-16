@@ -12,7 +12,11 @@ export class Registry {
     this.fetchImpl = fetchImpl;
     this.now = now;
     this.stationsConfig = new StationsConfig(cfg.stationsConfigPath);
-    this.publicUrl = makePublicUrl({ internalUrl: cfg.azuracastInternalUrl, publicUrl: cfg.azuracastPublicUrl });
+    this.publicUrl = makePublicUrl({
+      internalUrl: cfg.azuracastInternalUrl,
+      publicUrl: cfg.azuracastPublicUrl,
+      aliasHosts: cfg.azuracastAliasHosts || [],
+    });
 
     this.azuracast = { raw: [], lastSuccessAt: null, lastError: null, stale: true };
     this.externalStatus = new Map(); // id -> { check, stats, checkedAt }

@@ -12,8 +12,11 @@ export async function fetchNowPlaying({ baseUrl, timeoutMs, fetchImpl = fetch })
   return body;
 }
 
-/** Rewrites AzuraCast URLs to the public HTTPS origin. */
-export function makePublicUrl({ internalUrl, publicUrl }) {
+/**
+ * Rewrites AzuraCast URLs to the public origin.
+ * aliasHosts: other host:port values AzuraCast may put in URLs (e.g. its base_url host).
+ */
+export function makePublicUrl({ internalUrl, publicUrl, aliasHosts = [] }) {
   const internal = internalUrl ? new URL(internalUrl) : null;
   const pub = publicUrl ? new URL(publicUrl) : null;
   return (raw) => {
@@ -25,7 +28,7 @@ export function makePublicUrl({ internalUrl, publicUrl }) {
       return null;
     }
     if (pub) {
-      const isInternal = internal && u.host === internal.host;
+      const isInternal = (internal && u.host === internal.host) || aliasHosts.includes(u.host);
       const isPublicHost = u.hostname === pub.hostname;
       if (isInternal || isPublicHost) {
         u.protocol = pub.protocol;
