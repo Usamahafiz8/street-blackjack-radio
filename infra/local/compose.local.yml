@@ -1,0 +1,32 @@
+# LOCAL DEVELOPMENT ONLY - runs the registry API next to the local AzuraCast in WSL.
+# On the VPS, infra/compose.yml is used instead (with Caddy and HTTPS domains).
+#
+#   wsl -d Ubuntu-24.04 -u root -- docker compose -f /mnt/d/radio/infra/local/compose.local.yml up -d --build
+name: sbradio-local
+
+services:
+  registry:
+    build: ../../registry-api
+    restart: unless-stopped
+    environment:
+      AZURACAST_INTERNAL_URL: http://host.docker.internal:18080
+      # "auto": stream/art URLs follow whichever address the client used
+      # (localhost, the PC's Wi-Fi IP, or the temporary HTTPS tunnel), via the Windows gateway.
+      AZURACAST_PUBLIC_URL: auto
+      PUBLIC_BASE_URL: auto
+      AZURACAST_ALIAS_HOSTS: localhost:18080,127.0.0.1:18080
+      TRUST_PROXY_HEADERS: "true"
+      CORS_ORIGINS: "*"
+      STATIONS_CONFIG: /app/config/stations.config.json
+      STATE_DIR: /data
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - 127.0.0.1:3000:3000 # Windows sees this as localhost:3000 only
+    volumes:
+      # Live-edited from the Windows repo: changes to stations.config.json apply without a restart.
+      - ../../registry-api/config:/app/config:ro
+      - registry_data:/data
+
+volumes:
+  registry_data:

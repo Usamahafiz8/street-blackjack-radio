@@ -10,7 +10,8 @@
 //     -v /opt/sbradio/app/infra:/infra:ro -v /opt/sbradio/test-audio:/media:ro \
 //     node:22-alpine node /infra/scripts/provision-stations.mjs /infra/stations.poc.json /media
 //
-// Env: AZURACAST_API_KEY (required), AZURACAST_URL (default http://127.0.0.1:8080), RADIO_DOMAIN
+// Env: AZURACAST_API_KEY (required), AZURACAST_URL (default http://127.0.0.1:8080),
+//      RADIO_DOMAIN (VPS) or BASE_URL (local, e.g. http://localhost:18080)
 import { readFile, readdir, stat } from 'node:fs/promises';
 import { openAsBlob } from 'node:fs';
 import { basename, join } from 'node:path';
@@ -92,7 +93,9 @@ async function main() {
     always_use_ssl: false,      // Caddy already forces HTTPS; avoids redirect loops behind the proxy
     ip_source: 'xff',           // trust X-Forwarded-For from Caddy (real listener IPs)
   };
-  if (domain) settings.base_url = `https://${domain}`;
+  // BASE_URL overrides (local WSL: http://localhost:18080); otherwise https://RADIO_DOMAIN on the VPS.
+  if (process.env.BASE_URL) settings.base_url = process.env.BASE_URL;
+  else if (domain) settings.base_url = `https://${domain}`;
   await api('PUT', '/admin/settings', settings);
   info(`base_url=${settings.base_url || '(unchanged)'}; web proxy for radio on; IP source X-Forwarded-For`);
 
