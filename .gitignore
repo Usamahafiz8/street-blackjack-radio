@@ -23,3 +23,7 @@ dist/
 coverage/
 .DS_Store
 Thumbs.db
+
+# Vercel build output / project link
+.vercel-build/
+.vercel/

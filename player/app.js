@@ -7,7 +7,15 @@
 
   const CFG = window.SBR_CONFIG || {};
   const qs = new URLSearchParams(location.search);
-  const API_BASE = (qs.get('api') || CFG.apiBase || deriveApiBase()).replace(/\/+$/, '');
+  // Radio server (registry API) address, in priority order:
+  //   ?api=https://... in the link (remembered on this device) > remembered value > config.js > derived.
+  // Lets a separately hosted player (e.g. on Vercel) follow a test server whose address changes.
+  const API_KEY_LS = 'sbr.apiBase';
+  const fromLink = qs.get('api');
+  if (fromLink) { try { localStorage.setItem(API_KEY_LS, fromLink); } catch { /* private mode */ } }
+  let remembered = null;
+  try { remembered = localStorage.getItem(API_KEY_LS); } catch { /* private mode */ }
+  const API_BASE = (fromLink || remembered || CFG.apiBase || deriveApiBase()).replace(/\/+$/, '');
   const REFRESH_MS = CFG.refreshMs || 15000;
   // Capped at 10 s: the registry refreshes AzuraCast status every ~10 s, so a restarted
   // station is picked up quickly without hammering the server.
@@ -395,6 +403,15 @@
   }
 
   el.apiBase.textContent = API_BASE;
+  const apiInput = document.getElementById('api-input');
+  apiInput.value = API_BASE;
+  document.getElementById('api-save').addEventListener('click', () => {
+    const v = apiInput.value.trim().replace(/\/+$/, '');
+    try {
+      if (v) localStorage.setItem(API_KEY_LS, v); else localStorage.removeItem(API_KEY_LS);
+    } catch { /* private mode */ }
+    location.href = location.pathname; // reload without ?api=
+  });
   log(`player started; API ${API_BASE}; software volume ${volumeSupported ? 'supported' : 'not supported (iOS)'}`);
   loadStations();
 })();
