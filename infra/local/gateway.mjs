@@ -8,6 +8,7 @@
 //   /config.js              player config (API = same origin)
 //   /v1/*, /art/*, /health  Station Registry API      -> localhost:3000
 //   /listen/*, /hls/*       AzuraCast audio streams   -> localhost:18080
+//   /api/station/<s>/art/<id>  AzuraCast album art (images only) -> localhost:18080
 // Everything else - the AzuraCast dashboard, login, admin API, setup - is NOT proxied (404).
 // The AzuraCast admin stays on http://localhost:18080, reachable only from this PC.
 //
@@ -28,6 +29,10 @@ const TYPES = {
 };
 
 const AUDIO_PREFIXES = ['/listen/', '/hls/'];
+// The only AzuraCast API path let through: public, read-only album art used in now-playing data.
+const AZURACAST_ART = /^\/api\/station\/[a-z0-9_]+\/art\/[A-Za-z0-9_-]+(\.(jpg|png|webp))?$/;
+// ...which may redirect to AzuraCast's generic cover image under /static (images only).
+const AZURACAST_STATIC_IMAGE = /^\/static\/[A-Za-z0-9_./-]+\.(jpg|jpeg|png|webp|svg)$/;
 const REGISTRY_PREFIXES = ['/v1/', '/art/'];
 
 const log = (...a) => console.log(new Date().toISOString(), ...a);
@@ -58,6 +63,8 @@ function proxy(req, res, target, { stream = false } = {}) {
   const up = request({ ...target, method: req.method, path: req.url, headers }, (ur) => {
     const out = { ...ur.headers };
     delete out['set-cookie'];
+    // Redirects from AzuraCast point at its own (local-only) address; send the client to the gateway instead.
+    if (out.location) out.location = out.location.replace(/^https?:\/\/(localhost|127\.0\.0\.1):\d+/, `${proto}://${host}`);
     if (stream) out['cache-control'] = 'no-store';
     res.writeHead(ur.statusCode || 502, out);
     ur.pipe(res);
@@ -103,6 +110,9 @@ createServer((req, res) => {
   if (AUDIO_PREFIXES.some((p) => pathname.startsWith(p))) {
     log('audio', req.socket.remoteAddress, pathname);
     return proxy(req, res, AZURACAST, { stream: true });
+  }
+  if ((AZURACAST_ART.test(pathname) || AZURACAST_STATIC_IMAGE.test(pathname)) && !pathname.includes('..') && req.method !== 'OPTIONS') {
+    return proxy(req, res, AZURACAST);
   }
   if (REGISTRY_PREFIXES.some((p) => pathname.startsWith(p)) || pathname === '/health') {
     return proxy(req, res, REGISTRY);
