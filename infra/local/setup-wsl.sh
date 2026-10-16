@@ -19,4 +19,6 @@ log "Folders"
 install -d -m 755 /opt/sbradio /opt/sbradio/config /opt/sbradio/generated /opt/sbradio/test-audio /opt/sbradio/logs
 install -d -m 700 /opt/sbradio/secrets
 
+bash "$(dirname "$0")/fix-wsl-clock.sh"
+
 log "Done. Next: AZURACAST_DIR=/root/azuracast AZ_HTTP_PORT=18080 AZ_HTTPS_PORT=18443 bash install-azuracast.sh"
