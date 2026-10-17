@@ -32,3 +32,5 @@ Thumbs.db
 tools/demo-video/node_modules/
 .demo-work/
 *.mp4
+
+handover/
